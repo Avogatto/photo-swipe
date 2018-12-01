@@ -7,6 +7,7 @@ module.exports = {
   plugins: ['flowtype', 'prettier'],
   parser: 'babel-eslint',
   rules: {
+    'react/jsx-filename-extension': false,
     'prettier/prettier': [
       'error',
       {

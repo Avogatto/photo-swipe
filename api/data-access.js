@@ -1,7 +1,7 @@
 const { URLSearchParams } = require('url');
 const persist = require('node-persist');
 const fetch = require('node-fetch');
-const { apiBase, requests: { albumPageSize } } = require('../config.json');
+const { apiBase, requests: { albumPageSize } } = require('../config');
 
 let albumCache = null;
 let sharedAlbumCache = null;

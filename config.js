@@ -1,9 +1,9 @@
-const { clientId, clientSecret, sessionSecret } = require('credentials.json');
+const { clientId, clientSecret, sessionSecret } = require('./credentials.json');
 
 module.exports = {
   apiBase: 'https://photoslibrary.googleapis.com/v1',
   oAuth: {
-    callbackURL: 'http://localhost:8080/authenticated',
+    callbackURL: 'http://localhost:8080/auth/callback',
     clientID: clientId,
     clientSecret,
   },

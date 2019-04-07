@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "start-server": "nodemon --ignore sessions/ --ignore persist-*/ ./api/index.js",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "clear-cache": "rm -rf persist-albumcache",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "start-server": "npm run clear-cache && nodemon --ignore sessions/ --ignore persist-*/ ./api/index.js",
+    "test": "react-scripts test"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-session": "^1.15.6",

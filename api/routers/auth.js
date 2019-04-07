@@ -7,18 +7,17 @@ const router = Router();
 router.get('/callback', passport.authenticate('google', passportConfig),
   ({ app, session, user }, res) => {
     const io = app.get('io');
-    console.log('THIS IS USER', user);
     io.in(session.socketId).emit('authenticated', { name: user.profile.displayName });
-    res.end();
+    res.sendStatus(200);
 });
 
 router.get('/logout', (req, res) => {
   req.logout();
   req.session.destroy();
-  res.redirect('/login');
+  res.sendStatus(200);
 });
 
-router.use((req, res, next) => {
+router.use('/login',(req, res, next) => {
   req.session.socketId = req.query.socketId;
   next();
 });

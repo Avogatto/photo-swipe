@@ -3,6 +3,7 @@ const cors = require('cors');
 const { OAuth2Strategy } = require('passport-google-oauth');
 const express = require('express');
 const session = require('express-session');
+const bodyParser = require('body-parser')
 const sessionFileStore = require('session-file-store');
 const passport = require('passport');
 const socketio = require('socket.io')
@@ -14,17 +15,19 @@ const albumsRouter = require('./routers/albums');
 const app = express();
 const FileStore = sessionFileStore(session);
 
-app.use(express.json())
-app.use(passport.initialize())
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 passport.use(new OAuth2Strategy(
   oAuthConfig,
   // TODO: save the user to the database in this callback
   (token, refreshToken, profile, done) => done(null, { profile, token },
-)));
-app.use(cors({ origin: 'http://localhost:3000' })); // TODO: change for production
+  )));
+
+app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // TODO: change for production
+app.use(bodyParser.json());
 app.use(session({ ...sessionConfig, store: new FileStore({}) }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/auth', authRouter);
 app.use('/albums', albumsRouter);

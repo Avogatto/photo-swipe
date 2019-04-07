@@ -10,11 +10,15 @@ const {
 
 const router = Router();
 
-router.post('/memberships', async(req, res) => {
+router.use((req, res, next) => {
   if (!req.user || !req.isAuthenticated()) {
-    res.redirect('/login');
-    return;
+    res.sendStatus(401);
+  } else {
+    next();
   }
+})
+
+router.post('/memberships', async(req, res) => {
   const { shareToken } = req.body;
   const userToken = req.user.token;
   const userId = req.user.profile.id;
@@ -31,10 +35,6 @@ router.post('/memberships', async(req, res) => {
 });
 
 router.get('/:albumId/share-token', async(req, res) => {
-  if (!req.user || !req.isAuthenticated()) {
-    res.redirect('/login');
-    return;
-  }
   const { albumId } = req.params;
   const userToken = req.user.token;
   const userId = req.user.profile.id;
@@ -48,11 +48,6 @@ router.get('/:albumId/share-token', async(req, res) => {
 });
 
 router.get('/shared', async(req, res) => {
-  if (!req.user || !req.isAuthenticated()) {
-    res.redirect('/login');
-    return;
-  }
-
   const userToken = req.user.token;
   const userId = req.user.profile.id;
 
@@ -67,7 +62,6 @@ router.get('/shared', async(req, res) => {
 });
 
 router.get('/', async(req, res) => {
-  if (!req.user || !req.isAuthenticated()) res.redirect('/login');
   const userToken = req.user.token;
   const userId = req.user.profile.id;
   try {
@@ -80,10 +74,6 @@ router.get('/', async(req, res) => {
 });
 
 router.post('/', async(req, res) => {
-  if (!req.user || !req.isAuthenticated()) {
-    res.redirect('/login');
-    return;
-  }
   const userToken = req.user.token;
   const userId = req.user.profile.id;
   const title = `PS Album ${uuid.v4()}`;

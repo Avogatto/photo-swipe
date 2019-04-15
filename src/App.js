@@ -3,12 +3,12 @@ import io from 'socket.io-client'
 import OAuth from './OAuth'
 import './App.css'
 
-const API_URL = 'http://localhost:8080'; // TODO change for production
-const socket = io(API_URL)
+const { REACT_APP_API_BASE: API_BASE } = process.env;
+const socket = io(API_BASE)
 
 async function getAlbums() {
   try {
-    const response = await fetch(`${API_URL}/albums`, { credentials: 'include' });
+    const response = await fetch(`${API_BASE}/albums`, { credentials: 'include' });
     const result = await response.json();
     console.log('result???', result);
   } catch (err) {

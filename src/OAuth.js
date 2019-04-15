@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 
-const API_URL = 'http://localhost:8080'; // TODO: change for production
+const { REACT_APP_API_BASE: API_BASE } = process.env;
 
 // Adapted from:
 // https://codeburst.io/react-authentication-with-twitter-google-facebook-and-github-862d59583105
@@ -38,7 +38,7 @@ export default class OAuth extends Component {
     const width = 600, height = 600;
     const left = (window.innerWidth / 2) - (width / 2);
     const top = (window.innerHeight / 2) - (height / 2);
-    const url = `${API_URL}/auth/login?socketId=${socket.id}`;
+    const url = `${API_BASE}/auth/login?socketId=${socket.id}`;
 
     return window.open(url, '',
       `toolbar=no, location=no, directories=no, status=no, menubar=no,

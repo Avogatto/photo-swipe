@@ -15,6 +15,8 @@ const albumsRouter = require('./routers/albums');
 const app = express();
 const FileStore = sessionFileStore(session);
 
+app.use(cors({ origin: process.env.REACT_APP_BASE, credentials: true }));
+
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 passport.use(
@@ -25,7 +27,6 @@ passport.use(
   )
 );
 
-app.use(cors({ origin: process.env.REACT_APP_BASE, credentials: true }));
 app.use(bodyParser.json());
 app.use(session({ ...sessionConfig, store: new FileStore({}) }));
 app.use(passport.initialize());

@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { withRouter } from 'react-router-dom';
+// import PropTypes from 'prop-types';
+import Button from '../components/CustomButtons/Button.jsx';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 
 // Adapted from:
 // https://codeburst.io/react-authentication-with-twitter-google-facebook-and-github-862d59583105
 
-export default class OAuth extends Component {
+class OAuth extends Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    user: {},
-    disabled: false
+    this.state = {
+      user: {},
+      disabled: false
+    }
   }
 
   componentDidMount() {
@@ -60,38 +64,21 @@ export default class OAuth extends Component {
   }
 
   render() {
-    const { name, photo} = this.state.user;
-    const { disabled } = this.state;
-
-    console.log('this is state', this.state);
+    const { auth, from, history } = this.props;
 
     return (
-      <div>
-        {name
-          ? <div className='card'>
-              <img src={photo} alt={name} />
-              <FontAwesome
-                name='times-circle'
-                className='close'
-                onClick={this.closeCard}
-              />
-              <h4>{name}</h4>
-            </div>
-          : <div className='button-wrapper fadein-fast'>
-              <button
-                onClick={this.startAuth}
-                className={`google ${disabled ? 'disabled ' : ''}button`}
-              >
-              Click me to login
-                <FontAwesome
-                  name='google'
-                />
-              </button>
-            </div>
-        }
-      </div>
+        <Button
+          onClick={() => {
+            auth.login();
+            history.push(from);
+          }}
+          simple color='primary'
+          size='lg'
+        >
+          TRIGGER LOGIN!!!!!!
+        </Button>
     )
   }
 }
 
-OAuth.propTypes = { socket: PropTypes.object.isRequired };
+export default withRouter(OAuth);

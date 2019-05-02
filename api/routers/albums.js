@@ -16,7 +16,7 @@ router.use((req, res, next) => {
   } else {
     next();
   }
-})
+});
 
 router.post('/memberships', async(req, res) => {
   const { shareToken } = req.body;

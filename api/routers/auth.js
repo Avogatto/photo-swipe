@@ -4,6 +4,13 @@ const { passport: passportConfig } = require('../../config');
 
 const router = Router();
 
+router.get('/session', (req, res) => {
+  if (!req.user || !req.isAuthenticated()) {
+    res.status(404).json({ status: 'NOT FOUND' });
+  }
+  res.json(req.user);
+});
+
 router.get('/callback', passport.authenticate('google', passportConfig),
   ({ app, session, user }, res) => {
     const io = app.get('io');
@@ -19,6 +26,8 @@ router.get('/logout', (req, res) => {
 
 router.use('/login',(req, res, next) => {
   req.session.socketId = req.query.socketId;
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header
   next();
 });
 

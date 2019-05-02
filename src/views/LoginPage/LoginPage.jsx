@@ -19,6 +19,7 @@ import CardBody from '../../components/Card/CardBody.jsx';
 import CardHeader from '../../components/Card/CardHeader.jsx';
 import CardFooter from '../../components/Card/CardFooter.jsx';
 import CustomInput from '../../components/CustomInput/CustomInput.jsx';
+import OAuth from '../../custom/OAuth.jsx';
 
 import loginPageStyle from '../../assets/jss/material-kit-react/views/loginPage.jsx';
 
@@ -28,10 +29,17 @@ class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     // we use this to make the card to appear after the page has been rendered
-    this.state = { cardAnimaton: 'cardHidden' };
+    this.state = {
+      authenticated: false,
+      cardAnimaton: 'cardHidden'
+    };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { auth } = this.props;
+    const authenticated = await auth.isAuthenticated();
+    this.setState({ authenticated });
+
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
     setTimeout(
       function() {
@@ -42,10 +50,11 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    const { auth, location, history } = this.props;
+    const { auth, location, socket } = this.props;
     const { from } = location.state || { from: { pathname: '/' } }
+    const { authenticated } = this.state;
 
-    if (auth.isAuthenticated() === true) {
+    if (authenticated === true) {
       return <Redirect to={from} />
     }
 
@@ -155,16 +164,7 @@ class LoginPage extends React.Component {
                       />
                     </CardBody>
                     <CardFooter className={classes.cardFooter}>
-                      <Button
-                        onClick={() => {
-                          auth.login();
-                          history.push(from);
-                        }}
-                        simple color='primary'
-                        size='lg'
-                      >
-                        TRIGGER LOGIN!!!!!!
-                      </Button>
+                      <OAuth auth={auth} socket={socket} />
                     </CardFooter>
                   </form>
                 </Card>

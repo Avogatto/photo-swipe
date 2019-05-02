@@ -1,28 +1,28 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import io from 'socket.io-client'
+import OAuth from './OAuth'
+import './App.css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+const { REACT_APP_API_BASE: API_BASE } = process.env;
+const socket = io(API_BASE)
+
+async function getAlbums() {
+  try {
+    const response = await fetch(`${API_BASE}/albums`, { credentials: 'include' });
+    const result = await response.json();
+    console.log('result???', result);
+  } catch (err) {
+    console.error(err.toString());
   }
 }
 
-export default App;
+export default class App extends Component {
+  render() {
+    return (
+      <div className='wrapper'>
+        <OAuth socket={socket} />
+        <button onClick={getAlbums}>Get Albums</button>
+      </div>
+    )
+  }
+}

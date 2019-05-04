@@ -33,6 +33,7 @@
     "node-fetch": "^2.3.0",
     "node-persist": "^3.0.4",
     "node-sass": "^4.11.0",
+    "nodemon": "^1.19.0",
     "nouislider": "^13.1.4",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",

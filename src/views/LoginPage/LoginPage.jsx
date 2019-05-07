@@ -51,7 +51,7 @@ class LoginPage extends React.Component {
 
   render() {
     const { auth, location, socket } = this.props;
-    const { from } = location.state || { from: { pathname: '/' } }
+    const { from } = location.state || { from: { pathname: '/' } };
     const { authenticated } = this.state;
 
     if (authenticated === true) {

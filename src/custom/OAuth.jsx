@@ -11,20 +11,24 @@ const { REACT_APP_API_BASE: API_BASE } = process.env;
 class OAuth extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      user: {},
-      disabled: false
-    }
+    this.state = { disabled: false }
   }
 
   componentDidMount() {
-    const { socket } = this.props;
+    const { auth, socket } = this.props;
     socket.on('authenticated', user => {
-      console.log('do we get user?', user);
       this.popup.close();
-      this.setState({ user });
+      auth.setUser(user);
     });
+    // TODO: add on('error')
+  }
+
+  async checkAuthenticated() {
+    const { auth, history, location } = this.props;
+    const { from } = location.state || { from: { pathname: '/' } };
+    const authenticated = await auth.isAuthenticated();
+    console.log('are we authenticated?', authenticated);
+    if (authenticated) history.push(from);
   }
 
   checkPopup() {
@@ -59,23 +63,16 @@ class OAuth extends Component {
     }
   }
 
-  closeCard = () => {
-    this.setState({ user: {} });
-  }
-
   render() {
-    const { auth, from, history } = this.props;
+    this.checkAuthenticated();
 
     return (
         <Button
-          onClick={() => {
-            auth.login();
-            history.push(from);
-          }}
+          onClick={this.startAuth}
           simple color='primary'
           size='lg'
         >
-          TRIGGER LOGIN!!!!!!
+          Login with Google
         </Button>
     )
   }

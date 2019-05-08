@@ -29,19 +29,12 @@ class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     // we use this to make the card to appear after the page has been rendered
-    this.state = {
-      authenticated: false,
-      cardAnimaton: 'cardHidden'
-    };
+    this.state = { cardAnimaton: 'cardHidden' };
   }
 
   async componentDidMount() {
-    const { auth } = this.props;
-    const authenticated = await auth.isAuthenticated();
-    this.setState({ authenticated });
-
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
-    setTimeout(
+    this.timeout = setTimeout(
       function() {
         this.setState({ cardAnimaton: '' });
       }.bind(this),
@@ -49,10 +42,13 @@ class LoginPage extends React.Component {
     );
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
   render() {
-    const { auth, location, socket } = this.props;
+    const { authenticated, location, login, socket } = this.props;
     const { from } = location.state || { from: { pathname: '/' } };
-    const { authenticated } = this.state;
 
     if (authenticated === true) {
       return <Redirect to={from} />
@@ -164,7 +160,7 @@ class LoginPage extends React.Component {
                       />
                     </CardBody>
                     <CardFooter className={classes.cardFooter}>
-                      <OAuth auth={auth} socket={socket} />
+                      <OAuth login={login} socket={socket} />
                     </CardFooter>
                   </form>
                 </Card>

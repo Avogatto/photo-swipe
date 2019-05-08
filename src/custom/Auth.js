@@ -3,15 +3,15 @@ import { apiFetch } from '../utils';
 export default class Auth {
   constructor() {
     this.authenticated = null;
-    this.user = {};
+    this.profile = {};
 
-    this.getUser = this.getUser.bind(this);
+    this.getProfile = this.getProfile.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.logout = this.logout.bind(this);
   }
 
-  getUser() {
-    return this.user;
+  getProfile() {
+    return this.profile;
   }
 
   async isAuthenticated() {
@@ -20,7 +20,8 @@ export default class Auth {
       try {
         const result = await apiFetch('/auth/session');
         console.log('this is result', result);
-        this.authenticated = Boolean(result.user);
+        this.authenticated = Boolean(result.profile);
+        if (result.profile) this.profile = result.profile;
       } catch (err) {
         console.error('failed to confirm authenticated', err);
       }
@@ -37,12 +38,12 @@ export default class Auth {
     }
   }
 
-  setUser(user) {
-    if (user) {
-      console.log('this is user!', user);
+  saveProfile(profile) {
+    if (profile) {
+      console.log('this is profile!', profile);
 
       this.authenticated = true;
-      this.user = user;
+      this.profile = profile;
     }
   }
 }

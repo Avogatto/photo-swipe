@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 import Button from '../components/CustomButtons/Button.jsx';
 
@@ -15,30 +14,26 @@ class OAuth extends Component {
   }
 
   componentDidMount() {
-    const { auth, socket } = this.props;
+    const { login, socket } = this.props;
     socket.on('authenticated', user => {
       this.popup.close();
-      auth.setUser(user);
+      login(user);
     });
     // TODO: add on('error')
   }
 
-  async checkAuthenticated() {
-    const { auth, history, location } = this.props;
-    const { from } = location.state || { from: { pathname: '/' } };
-    const authenticated = await auth.isAuthenticated();
-    console.log('are we authenticated?', authenticated);
-    if (authenticated) history.push(from);
-  }
-
   checkPopup() {
-    const check = setInterval(() => {
+    this.interval = setInterval(() => {
       const { popup } = this;
       if (!popup || popup.closed || popup.closed === undefined) {
-        clearInterval(check);
+        clearInterval(this.interval);
         this.setState({ disabled: false });
       }
     }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   openPopup() {
@@ -64,8 +59,6 @@ class OAuth extends Component {
   }
 
   render() {
-    this.checkAuthenticated();
-
     return (
         <Button
           onClick={this.startAuth}
@@ -78,4 +71,4 @@ class OAuth extends Component {
   }
 }
 
-export default withRouter(OAuth);
+export default OAuth;

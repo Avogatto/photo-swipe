@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build-css && react-scripts build",
+    "build": "npm run build-package && react-scripts build",
     "build-package": "npm run build-package-css && babel src --out-dir dist",
     "build-package-css": "node-sass src/assets/scss/material-kit-react.scss dist/material-kit-react.css",
     "clear-cache": "rm -rf persist-albumcache",

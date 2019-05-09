@@ -20,3 +20,8 @@ npm-debug.log*
 /sessions
 /persist-*
 credentials.json
+
+# package
+/dist
+# compiled css
+*.css

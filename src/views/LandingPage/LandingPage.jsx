@@ -26,14 +26,14 @@ const dashboardRoutes = [];
 
 class LandingPage extends React.Component {
   render() {
-    const { classes, ...rest } = this.props;
+    const { authenticated, classes, logout, ...rest } = this.props;
     return (
       <div>
         <Header
           color='transparent'
           routes={dashboardRoutes}
-          brand='Material Kit React'
-          rightLinks={<HeaderLinks />}
+          brand='Photo Swipe'
+          rightLinks={<HeaderLinks authenticated={authenticated} logout={logout}/>}
           fixed
           changeColorOnScroll={{
             height: 400,
@@ -45,12 +45,9 @@ class LandingPage extends React.Component {
           <div className={classes.container}>
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
-                <h1 className={classes.title}>Your Story Starts With Us.</h1>
+                <h1 className={classes.title}>Getting Started</h1>
                 <h4>
-                  Every landing page needs a small description after the big
-                  bold title, that's why we added this text here. Add here all
-                  the information that can make you or your product create the
-                  first impression.
+                  First create an album or add tags to existing albums before submitting.
                 </h4>
                 <br />
                 <Button

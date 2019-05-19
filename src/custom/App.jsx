@@ -6,7 +6,6 @@ import LandingPage from '../views/LandingPage/LandingPage.jsx';
 import ProfilePage from '../views/ProfilePage/ProfilePage.jsx';
 import LoginPage from '../views/LoginPage/LoginPage.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
-import AuthButton from './AuthButton.jsx';
 import '../assets/scss/material-kit-react.scss?v=1.4.0';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
@@ -22,7 +21,6 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    console.log('you called componentDidMount in PrivateRoute');
     const { auth } = this.props;
     const authenticated = await auth.isAuthenticated();
     this.setState({ authenticated, mounted: true });
@@ -36,10 +34,10 @@ class App extends Component {
     history.push(from);
   }
 
-  logout() {
+  async logout() {
     const { auth, history } = this.props
-    auth.logout();
-    this.setState({ authenticated: true });
+    await auth.logout();
+    this.setState({ authenticated: false });
     history.push('/login');
   }
 
@@ -50,7 +48,6 @@ class App extends Component {
         {
           mounted &&
           <div>
-            <AuthButton authenticated={authenticated} logout={this.logout} />
             <Switch>
               <Route
                 path='/login'
@@ -62,8 +59,18 @@ class App extends Component {
                 )}
                 />
               <Route path='/components' component={Components} />
-              <PrivateRoute authenticated={authenticated} path='/profile' component={ProfilePage} />
-              <PrivateRoute authenticated={authenticated} path='/' component={LandingPage} />
+              <PrivateRoute
+                authenticated={authenticated}
+                path='/profile'
+                component={ProfilePage}
+                logout={this.logout}
+              />
+              <PrivateRoute
+                authenticated={authenticated}
+                path='/'
+                component={LandingPage}
+                logout={this.logout}
+              />
             </Switch>
           </div>
         }

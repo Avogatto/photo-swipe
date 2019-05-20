@@ -61,7 +61,7 @@ class LoginPage extends React.Component {
           absolute
           color='transparent'
           brand='Material Kit React'
-          rightLinks={<HeaderLinks />}
+          rightLinks={<HeaderLinks authenticated={authenticated} />}
           {...rest}
         />
         <div

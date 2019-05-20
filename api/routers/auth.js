@@ -26,8 +26,6 @@ router.get('/logout', (req, res) => {
 
 router.use('/login',(req, res, next) => {
   req.session.socketId = req.query.socketId;
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header
   next();
 });
 

@@ -19,7 +19,6 @@ export default class Auth {
     if (this.authenticated === null /* or check experation */) {
       try {
         const result = await apiFetch('/auth/session');
-        console.log('this is result', result);
         this.authenticated = Boolean(result.profile);
         if (result.profile) this.profile = result.profile;
       } catch (err) {
@@ -34,7 +33,7 @@ export default class Auth {
       await apiFetch('/auth/logout');
       this.authenticated = false;
     } catch (err) {
-      console.error('failed to logout', err);
+      console.error('failed to logout', err.toString());
     }
   }
 

@@ -10,14 +10,6 @@ const {
 
 const router = Router();
 
-router.use((req, res, next) => {
-  if (!req.user || !req.isAuthenticated()) {
-    res.sendStatus(401);
-  } else {
-    next();
-  }
-});
-
 router.post('/memberships', async(req, res) => {
   const { shareToken } = req.body;
   const userToken = req.user.token;

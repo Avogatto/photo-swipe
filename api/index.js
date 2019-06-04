@@ -11,6 +11,7 @@ const { oAuth: oAuthConfig, session: sessionConfig } = require('../config');
 const { initializeCache } = require('./data-access');
 const authRouter = require('./routers/auth');
 const albumsRouter = require('./routers/albums');
+const checkToken = require('./middleware/check-token');
 
 const app = express();
 const FileStore = sessionFileStore(session);
@@ -23,7 +24,12 @@ passport.use(
   new OAuth2Strategy(
     oAuthConfig,
     // TODO: save the user to the database in this callback
-    (token, refreshToken, profile, done) => done(null, { profile, token })
+    (token, refreshToken, params, profile, done) => {
+      const { expires_in: expiresIn } = params;
+      const now = new Date();
+      const expiry = now.setSeconds(now.getSeconds() + (expiresIn - 300));
+      done(null, { profile, token, refreshToken, expiry });
+    }
   )
 );
 
@@ -33,6 +39,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/auth', authRouter);
+
+app.use(checkToken);
 app.use('/albums', albumsRouter);
 
 async function startServer() {

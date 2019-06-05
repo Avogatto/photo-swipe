@@ -15,7 +15,7 @@ async function getAccessToken(refreshToken) {
   );
   const result = await response.json();
   if (response.status !== 200) throw new Error(JSON.stringify(result));
-  return result.access_token;
+  return result;
 }
 
 module.exports = async (req, res, next) => {
@@ -23,26 +23,28 @@ module.exports = async (req, res, next) => {
     res.sendStatus(401);
   } else {
     const { expiry, refreshToken } = req.user;
-    if (Date.now() >= expiry) {
+    const now = new Date();
+    if (now.getTime() >= expiry) {
       try {
         const { access_token: token, expires_in: expiresIn } = await getAccessToken(refreshToken);
-        const now = new Date();
-        const expiry = now.setSeconds(now.getSeconds() + (expiresIn - 300));
+        const updatedExpiry = now.setSeconds(now.getSeconds() + (expiresIn - 300));
         req.session.passport.user.token = token;
-        req.session.passport.user.expiry = expiry;
+        req.session.passport.user.expiry = updatedExpiry;
         req.session.save((err) => {
           if (err) {
-            console.log('Failed to update token on session', err);
-            return next(err);
+            console.error('Failed to update token on session', err);
+            next(err);
+          } else {
+            console.log('Successfully refreshed token');
+            next();
           }
-          return next();
         });
       } catch (err) {
-        console.log('Failed to refresh access token', err);
-        return next(err);
+        console.error('Failed to refresh access token', err);
+        next(err);
       }
+    } else {
+      next();
     }
-    console.log('Token is still valid');
-    next();
   }
 };

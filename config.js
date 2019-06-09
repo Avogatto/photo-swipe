@@ -18,7 +18,6 @@ module.exports = {
   },
   requests: {
     albumPageSize: 50,
-    searchLimit: 150,
     searchPageSize: 100
   },
   session: {

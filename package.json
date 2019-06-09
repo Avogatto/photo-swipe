@@ -7,7 +7,7 @@
     "build": "npm run build-package && react-scripts build",
     "build-package": "npm run build-package-css && babel src --out-dir dist",
     "build-package-css": "node-sass src/assets/scss/material-kit-react.scss dist/material-kit-react.css",
-    "clear-cache": "rm -rf persist-albumcache",
+    "clear-cache": "rm -rf persist-albumcache persist-mediacache persist-sharedalbumcache",
     "compile-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",

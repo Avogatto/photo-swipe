@@ -18,10 +18,9 @@ import Parallax from '../../components/Parallax/Parallax.jsx';
 import landingPageStyle from '../../assets/jss/material-kit-react/views/landingPage.jsx';
 
 // Sections for this page
-import ProductSection from './Sections/ProductSection.jsx';
-import TeamSection from './Sections/TeamSection.jsx';
-import WorkSection from './Sections/WorkSection.jsx';
+// import ProductSection from './Sections/ProductSection.jsx';
 
+const { REACT_APP_API_BASE: API_BASE } = process.env;
 const dashboardRoutes = [];
 
 class LandingPage extends React.Component {
@@ -53,12 +52,11 @@ class LandingPage extends React.Component {
                 <Button
                   color='danger'
                   size='lg'
-                  href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                  href={`${API_BASE}/albums`}
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  <i className='fas fa-play' />
-                  Watch video
+                  Get Albums
                 </Button>
               </GridItem>
             </GridContainer>
@@ -66,9 +64,7 @@ class LandingPage extends React.Component {
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
           <div className={classes.container}>
-            <ProductSection />
-            <TeamSection />
-            <WorkSection />
+          <div> populate albums here </div>
           </div>
         </div>
         <Footer />

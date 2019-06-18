@@ -4,70 +4,49 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build-package && react-scripts build",
-    "build-package": "npm run build-package-css && babel src --out-dir dist",
-    "build-package-css": "node-sass src/assets/scss/material-kit-react.scss dist/material-kit-react.css",
-    "clear-cache": "rm -rf persist-albumcache",
-    "compile-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css",
+    "build": "react-scripts build",
+    "clear-cache": "rm -rf persist-albumcache persist-sharedalbumcache",
     "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
-    "lint:check": "eslint . --ext=js,jsx;  exit 0",
-    "lint:fix": "eslint . --ext=js,jsx --fix;  exit 0",
-    "map-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css --source-map true",
-    "minify-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.min.css --output-style compressed",
     "start-app": "react-scripts start",
     "start-server": "node ./api/index.js",
     "start-server-dev": "npm run clear-cache && nodemon --ignore sessions/ --ignore persist-*/ -r dotenv/config ./api/index.js",
-    "test": "react-scripts test --env=jsdom"
+    "test": "react-scripts test"
   },
   "dependencies": {
-    "@material-ui/core": "^3.9.3",
-    "@material-ui/icons": "^3.0.2",
     "body-parser": "^1.19.0",
-    "classnames": "^2.2.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.16.1",
     "googleapis": "^40.0.0",
-    "history": "^4.9.0",
-    "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "node-persist": "^3.0.4",
-    "node-sass": "^4.12.0",
-    "nouislider": "^13.1.5",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
-    "prop-types": "^15.7.2",
     "react": "^16.8.6",
-    "react-datetime": "^2.16.3",
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
-    "react-slick": "^0.23.2",
-    "react-swipeable-views": "^0.13.3",
+    "react-scripts": "^3.0.1",
     "session-file-store": "^1.2.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
-    "dotenv": "^7.0.0",
-    "react-scripts": "^2.1.8"
-  },
-  "optionalDependencies": {
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-prettier": "^3.0.1"
+    "dotenv": "^7.0.0"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

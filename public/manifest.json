@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Photo Swipe",
+  "name": "Photo Swipe",
   "icons": [
     {
       "src": "favicon.ico",

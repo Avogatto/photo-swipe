@@ -1,23 +1,27 @@
-const { URLSearchParams } = require("url");
-const persist = require("node-persist");
-const fetch = require("node-fetch");
+// https://github.com/googlesamples/google-photos/blob/master/REST/PhotoFrame/app.js
+
+const { URLSearchParams } = require('url');
+const persist = require('node-persist');
+const fetch = require('node-fetch');
 const {
   apiBase,
-  requests: { albumPageSize }
-} = require("../../config");
-const { getShareTokens } = require('../user/data-access');
+  requests: { albumPageSize },
+} = require('../../config');
+const {
+  getShareTokens
+} = require('./user');
 
 let albumCache = null;
 let sharedAlbumCache = null;
 
 async function initializeCache() {
   albumCache = persist.create({
-    dir: "persist-albumcache/",
-    ttl: 600000
+    dir: 'persist-albumcache/',
+    ttl: 600000,
   });
   sharedAlbumCache = persist.create({
-    dir: "persist-sharedalbumcache/",
-    ttl: 600000
+    dir: 'persist-sharedalbumcache/',
+    ttl: 600000,
   });
   return Promise.all([albumCache.init(), sharedAlbumCache.init()]);
 }
@@ -25,14 +29,14 @@ async function initializeCache() {
 async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
   const searchParamsString = new URLSearchParams(searchParams).toString();
   const fullUrl = `${apiBase}/${endpoint}?${searchParamsString}`;
-  console.log("Maing request to:", fullUrl);
+  console.log('Maing request to:', fullUrl);
   const response = await fetch(fullUrl, {
     ...params,
     body: JSON.stringify(body),
     headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${userToken}`
-    }
+      Accept: 'application/json',
+      Authorization: `Bearer ${userToken}`,
+    },
   });
   const result = await response.json();
   if (response.status !== 200) throw result;
@@ -41,10 +45,10 @@ async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
 
 async function joinAlbum(userToken, userId, shareToken) {
   const endpoint = `sharedAlbums:join`;
-  const params = { method: "POST" };
+  const params = { method: 'POST' };
   const body = { shareToken };
   const result = await fetchJson({ body, endpoint, params, userToken });
-  console.log("WE GOT A RESULT", result);
+  console.log('WE GOT A RESULT', result);
   await sharedAlbumCache.removeItem(userId);
   return result;
 }
@@ -52,36 +56,38 @@ async function joinAlbum(userToken, userId, shareToken) {
 async function joinPendingAlbums(userToken, userId) {
   const shareTokens = getShareTokens(userId);
   const joinAllPromises = shareTokens.map(token => {
-    return joinAlbum(userToken, userId, token);
+    return async () => {
+      return joinAlbum(userToken, userId, token);
+    };
   });
   return Promise.all(joinAllPromises);
 }
 
 async function shareAlbum(userToken, userId, albumId) {
   const endpoint = `albums/${albumId}:share`;
-  const params = { method: "POST" };
+  const params = { method: 'POST' };
   const body = {
     sharedAlbumOptions: {
       isCollaborative: false,
-      isCommentable: true
-    }
+      isCommentable: true,
+    },
   };
   const result = await fetchJson({ body, endpoint, params, userToken });
-  console.log("WE GOT A RESULT", result);
+  console.log('WE GOT A RESULT', result);
   await sharedAlbumCache.removeItem(userId);
   return result;
 }
 
 async function createAlbum(userToken, userId, title) {
-  const params = { method: "POST" };
+  const params = { method: 'POST' };
   const body = { album: { title } };
   const album = await fetchJson({
     body,
-    endpoint: "albums",
+    endpoint: 'albums',
     params,
-    userToken
+    userToken,
   });
-  console.log("THIS IS RESULT", album);
+  console.log('THIS IS RESULT', album);
   await albumCache.removeItem(userId);
   return album;
 }
@@ -91,7 +97,7 @@ async function getPaginatedAlbumsList(userToken, endpoint) {
   let albums = null;
   let searchParams = {
     pageSize: albumPageSize,
-    excludeNonAppCreatedData: true
+    excludeNonAppCreatedData: true,
   };
   do {
     const result =
@@ -111,12 +117,12 @@ async function getPaginatedAlbumsList(userToken, endpoint) {
 async function getAlbums(userToken, userId) {
   const cachedAlbums = await albumCache.getItem(userId);
   if (cachedAlbums) {
-    console.log("Loaded albums from cache.");
+    console.log('Loaded albums from cache.');
     return cachedAlbums;
   }
-  console.log("Loading albums from API.");
+  console.log('Loading albums from API.');
   try {
-    const data = await getPaginatedAlbumsList(userToken, "albums");
+    const data = await getPaginatedAlbumsList(userToken, 'albums');
     await albumCache.setItem(userId, data);
     return data;
   } catch (err) {
@@ -128,12 +134,12 @@ async function getAlbums(userToken, userId) {
 async function getSharedAlbums(userToken, userId) {
   const cachedAlbums = await sharedAlbumCache.getItem(userId);
   if (cachedAlbums) {
-    console.log("Loaded shared albums from cache.");
+    console.log('Loaded shared albums from cache.');
     return cachedAlbums;
   }
-  console.log("Loading shared albums from API.");
+  console.log('Loading shared albums from API.');
   try {
-    const data = await getPaginatedAlbumsList(userToken, "sharedAlbums");
+    const data = await getPaginatedAlbumsList(userToken, 'sharedAlbums');
     await sharedAlbumCache.setItem(userId, data);
     return data;
   } catch (err) {
@@ -149,5 +155,6 @@ module.exports = {
   initializeCache,
   joinAlbum,
   joinPendingAlbums,
-  shareAlbum
+  shareAlbum,
+  getShareTokens,
 };

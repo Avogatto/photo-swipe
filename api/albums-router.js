@@ -6,7 +6,10 @@ const {
   getSharedAlbums,
   joinAlbum,
   shareAlbum
-} = require("./data-access");
+} = require("./albums-controller");
+const {
+  addShareToken
+} = require('./user');
 
 const router = Router();
 
@@ -34,12 +37,14 @@ router.post("/memberships", async (req, res) => {
   }
 });
 
-router.get("/:albumId/share-token", async (req, res) => {
+router.post("/:albumId/share-token", async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
   const userId = req.user.profile.id;
+  const shareUser = req.body.shareUser;
   try {
-    const album = await shareAlbum(userToken, userId, albumId);
+    const album = await shareAlbum(userToken, userId, albumId, shareUser);
+    await addShareToken(shareUser)
     res.json({ album });
   } catch (err) {
     console.log("ERRRRRRR", err);

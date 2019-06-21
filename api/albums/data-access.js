@@ -5,6 +5,7 @@ const {
   apiBase,
   requests: { albumPageSize }
 } = require("../../config");
+const { getShareTokens } = require('../user/data-access');
 
 let albumCache = null;
 let sharedAlbumCache = null;
@@ -51,9 +52,7 @@ async function joinAlbum(userToken, userId, shareToken) {
 async function joinPendingAlbums(userToken, userId) {
   const shareTokens = getShareTokens(userId);
   const joinAllPromises = shareTokens.map(token => {
-    return async () => {
-      return joinAlbum(userToken, userId, token);
-    };
+    return joinAlbum(userToken, userId, token);
   });
   return Promise.all(joinAllPromises);
 }

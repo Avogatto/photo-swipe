@@ -11,6 +11,9 @@ const { oAuth: oAuthConfig, session: sessionConfig } = require("../config");
 const { initializeCache, joinPendingAlbums } = require("./albums/data-access");
 const authRouter = require("./user/auth");
 const albumsRouter = require("./albums/albums");
+const firebase = require("firebase");
+
+firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 
 const app = express();
 const FileStore = sessionFileStore(session);
@@ -26,7 +29,6 @@ passport.use(
       console.log("refreshToken", refreshToken);
       console.log("profile", profile);
 
-      // TODO: get share tokens for user
       await joinPendingAlbums(token, profile.id);
 
       done(null, { profile, token });

@@ -3,6 +3,7 @@ const uuid = require('uuid');
 const {
   createAlbum,
   getAlbums,
+  getAlbumPhotos,
   getSharedAlbums,
   joinAlbum,
   shareAlbum,
@@ -33,6 +34,18 @@ router.get('/:albumId/share-token', async(req, res) => {
   try {
     const album = await shareAlbum(userToken, userId, albumId);
     res.json({ album });
+  } catch (err) {
+    console.log('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/:albumId/photos', async(req, res) => {
+  const { albumId } = req.params;
+  const userToken = req.user.token;
+  try {
+    const photos = await getAlbumPhotos(userToken, albumId);
+    res.json({ photos });
   } catch (err) {
     console.log('ERRRRRRR', err);
     res.status(500).json(err);

@@ -61,11 +61,18 @@ class OAuth extends Component {
   render() {
     return (
         <Button
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '10rem'
+          }}
           onClick={this.startAuth}
-          simple color='primary'
+          color='primary'
           size='lg'
         >
-          Login with Google
+          Login With Google
         </Button>
     )
   }

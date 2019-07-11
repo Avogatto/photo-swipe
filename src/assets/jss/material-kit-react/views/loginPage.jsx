@@ -22,7 +22,7 @@ const signupPageStyle = {
     border: '0',
     alignItems: 'center',
     '&:before': {
-      background: 'rgba(0, 0, 0, 0.5)'
+      background: 'lavender'
     },
     '&:before,&:after': {
       position: 'absolute',
@@ -35,7 +35,7 @@ const signupPageStyle = {
       content: '""'
     },
     '& footer li a,& footer li a:hover,& footer li a:active': {
-      color: '#FFFFFF'
+      color: '#495057'
     },
     '& footer': {
       position: 'absolute',

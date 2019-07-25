@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import io from "socket.io-client";
+
 import LandingPage from "../views/LandingPage/LandingPage.jsx";
 import LoginPage from "../views/LoginPage/LoginPage.jsx";
+import ListAlbums from "../views/ListAlbums/ListAlbums.jsx";
+import TestView from "../views/TestView/TestView.jsx";
+
 import PrivateRoute from "../components/PrivateRoute.jsx";
+
 import "./App.css";
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
@@ -57,6 +62,26 @@ class App extends Component {
                   />
                 )}
               />
+
+              <Route
+                path="/test-route"
+                render={props => (
+                  <TestView
+                    {...props}
+                    authenticated={authenticated}
+                    login={this.login}
+                    socket={socket}
+                  />
+                )}
+              />
+
+              <PrivateRoute
+                authenticated={authenticated}
+                path="/list-albums"
+                component={ListAlbums}
+                logout={this.logout}
+              />
+
               <PrivateRoute
                 authenticated={authenticated}
                 path="/"

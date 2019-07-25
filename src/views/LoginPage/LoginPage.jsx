@@ -12,12 +12,18 @@ export default function(props) {
   }
 
   return (
-    <div className="container">
-      <h1 className="heading">
-        <span className="heading-section">Photo</span>
-        <span className="heading-section">Swipe</span>
-      </h1>
-      <OAuth login={login} socket={socket} />
+    <div className="login-page u-center-vertical u-center-text">
+      <header className="login-page__header">
+        <h1 className="title">
+          <span className="title__section">Photo</span>
+          <span className="title__section">Swipe</span>
+        </h1>
+      </header>
+      <main className="login-page__main">
+        <div className="row">
+          <OAuth login={login} socket={socket} />
+        </div>
+      </main>
     </div>
   );
 }

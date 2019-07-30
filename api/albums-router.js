@@ -3,6 +3,7 @@ const uuid = require("uuid");
 const {
   createAlbum,
   getAlbums,
+  getAlbumPhotos,
   getSharedAlbums,
   joinAlbum,
   shareAlbum
@@ -13,15 +14,7 @@ const {
 
 const router = Router();
 
-router.use((req, res, next) => {
-  if (!req.user || !req.isAuthenticated()) {
-    res.sendStatus(401);
-  } else {
-    next();
-  }
-});
-
-router.post("/memberships", async (req, res) => {
+router.post('/memberships', async (req, res) => {
   const { shareToken } = req.body;
   const userToken = req.user.token;
   const userId = req.user.profile.id;
@@ -52,7 +45,19 @@ router.post("/:albumId/share-token", async (req, res) => {
   }
 });
 
-router.get("/shared", async (req, res) => {
+router.get('/:albumId/photos', async (req, res) => {
+  const { albumId } = req.params;
+  const userToken = req.user.token;
+  try {
+    const photos = await getAlbumPhotos(userToken, albumId);
+    res.json({ photos });
+  } catch (err) {
+    console.log('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/shared', async (req, res) => {
   const userToken = req.user.token;
   const userId = req.user.profile.id;
 

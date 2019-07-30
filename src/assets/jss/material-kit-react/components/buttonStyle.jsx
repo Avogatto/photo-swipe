@@ -140,54 +140,6 @@ const buttonStyle = {
       color: grayColor
     }
   },
-  twitter: {
-    backgroundColor: '#55acee',
-    color: '#fff',
-    boxShadow:
-      '0 2px 2px 0 rgba(85, 172, 238, 0.14), 0 3px 1px -2px rgba(85, 172, 238, 0.2), 0 1px 5px 0 rgba(85, 172, 238, 0.12)',
-    '&:hover,&:focus,&:visited': {
-      backgroundColor: '#55acee',
-      color: '#fff',
-      boxShadow:
-        '0 14px 26px -12px rgba(85, 172, 238, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(85, 172, 238, 0.2)'
-    }
-  },
-  facebook: {
-    backgroundColor: '#3b5998',
-    color: '#fff',
-    boxShadow:
-      '0 2px 2px 0 rgba(59, 89, 152, 0.14), 0 3px 1px -2px rgba(59, 89, 152, 0.2), 0 1px 5px 0 rgba(59, 89, 152, 0.12)',
-    '&:hover,&:focus': {
-      backgroundColor: '#3b5998',
-      color: '#fff',
-      boxShadow:
-        '0 14px 26px -12px rgba(59, 89, 152, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(59, 89, 152, 0.2)'
-    }
-  },
-  google: {
-    backgroundColor: '#dd4b39',
-    color: '#fff',
-    boxShadow:
-      '0 2px 2px 0 rgba(221, 75, 57, 0.14), 0 3px 1px -2px rgba(221, 75, 57, 0.2), 0 1px 5px 0 rgba(221, 75, 57, 0.12)',
-    '&:hover,&:focus': {
-      backgroundColor: '#dd4b39',
-      color: '#fff',
-      boxShadow:
-        '0 14px 26px -12px rgba(221, 75, 57, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(221, 75, 57, 0.2)'
-    }
-  },
-  github: {
-    backgroundColor: '#333333',
-    color: '#fff',
-    boxShadow:
-      '0 2px 2px 0 rgba(51, 51, 51, 0.14), 0 3px 1px -2px rgba(51, 51, 51, 0.2), 0 1px 5px 0 rgba(51, 51, 51, 0.12)',
-    '&:hover,&:focus': {
-      backgroundColor: '#333333',
-      color: '#fff',
-      boxShadow:
-        '0 14px 26px -12px rgba(51, 51, 51, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(51, 51, 51, 0.2)'
-    }
-  },
   simple: {
     '&,&:focus,&:hover,&:visited': {
       color: '#FFFFFF',

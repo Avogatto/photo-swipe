@@ -6,18 +6,19 @@ module.exports = {
     clientSecret: process.env.CLIENT_SECRET
   },
   passport: {
+    accessType: 'offline',
+    failureFlash: true,
+    prompt: 'consent',
     scope: [
       "https://www.googleapis.com/auth/photoslibrary.sharing",
       "https://www.googleapis.com/auth/photoslibrary.readonly",
       "profile",
       "email"
     ],
-    failureFlash: true,
     session: true
   },
   requests: {
     albumPageSize: 50,
-    searchLimit: 150,
     searchPageSize: 100
   },
   session: {

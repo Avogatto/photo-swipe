@@ -156,5 +156,4 @@ module.exports = {
   joinAlbum,
   joinPendingAlbums,
   shareAlbum,
-  getShareTokens,
 };

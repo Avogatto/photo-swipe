@@ -7,11 +7,11 @@ const bodyParser = require("body-parser");
 const sessionFileStore = require("session-file-store");
 const passport = require("passport");
 const socketio = require("socket.io");
+const firebase = require("firebase");
 const { oAuth: oAuthConfig, session: sessionConfig } = require("../config");
 const { initializeCache, joinPendingAlbums } = require("./albums/data-access");
 const authRouter = require("./user/auth");
 const albumsRouter = require("./albums/albums");
-const firebase = require("firebase");
 
 firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 

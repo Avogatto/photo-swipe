@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const passport = require("passport");
-const { passport: passportConfig } = require("../../config");
+const { passport: passportConfig } = require("../config");
 
 const router = Router();
 

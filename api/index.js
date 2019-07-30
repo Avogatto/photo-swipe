@@ -8,14 +8,14 @@ const sessionFileStore = require('session-file-store');
 const passport = require('passport');
 const socketio = require('socket.io');
 const firebase = require("firebase");
-const { oAuth: oAuthConfig, session: sessionConfig } = require('../config');
-const { initializeCache } = require('./data-access');
-const authRouter = require('./routers/auth');
-const albumsRouter = require('./routers/albums');
-const checkToken = require('./middleware/check-token');
-const { joinPendingAlbums } = require('./albums-controller');
 
 firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
+
+const { oAuth: oAuthConfig, session: sessionConfig } = require('../config');
+const authRouter = require('./auth-router');
+const albumsRouter = require('./albums-router');
+const checkToken = require('./middleware/check-token');
+const { initializeCache, joinPendingAlbums } = require('./albums-controller');
 
 const app = express();
 const FileStore = sessionFileStore(session);

@@ -29,6 +29,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^3.0.1",
+    "semantic-ui-react": "^0.87.3",
     "session-file-store": "^1.2.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",

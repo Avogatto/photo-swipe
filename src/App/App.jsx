@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import LandingPage from "../views/LandingPage/LandingPage.jsx";
 import LoginPage from "../views/LoginPage/LoginPage.jsx";
 import ListAlbums from "../views/ListAlbums/ListAlbums.jsx";
+import ListPhotos from "../views/ListPhotos/ListPhotos.jsx";
 import TestView from "../views/TestView/TestView.jsx";
 
 import PrivateRoute from "../components/PrivateRoute.jsx";
@@ -79,6 +80,13 @@ class App extends Component {
                 authenticated={authenticated}
                 path="/list-albums"
                 component={ListAlbums}
+                logout={this.logout}
+              />
+
+              <PrivateRoute
+                authenticated={authenticated}
+                path="/list-photos"
+                component={ListPhotos}
                 logout={this.logout}
               />
 

@@ -10,7 +10,7 @@ export default function(props) {
       <Header />
       <main className="landing-page__content u-center-vertical u-center-text">
         <div className="row">
-          <Link to="/list-albums">
+          <Link to="/albums">
             <button className="btn">View Existing Albums</button>
           </Link>
         </div>

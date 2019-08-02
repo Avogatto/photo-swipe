@@ -35,7 +35,7 @@ export default class ListAlbums extends React.Component {
           rowItems.push(
             <div className="col-1-of-3" key={id + j}>
               <figure>
-                <Link to="/list-photos">
+                <Link to={`/albums/${id}/photos`}>
                   <img src={`${coverPhotoBaseUrl}=w${300}-h${300}`} alt={id} />
                   <figcaption>{title}</figcaption>
                 </Link>

@@ -6,9 +6,6 @@ import TaggablePhoto from "../../components/TaggablePhoto/TaggablePhoto.jsx";
 
 import "./ListPhotos.css";
 
-const albumId =
-  "ADABQEVrj8uJJ39tWba0EIcxQgWKu5c_mvFTvFdvpvKAVzoxwslBYcAI0mINDsHfazSQWiri__1M";
-
 const userList = [
   { name: "Sara Rubin", email: "sara.rubin@example.com" },
   { name: "Mackenzie Turner", email: "mackenzie.turner@example.com" },
@@ -23,8 +20,11 @@ export default class ListPhotos extends React.Component {
   }
 
   async fetchPhotos() {
-    // const { albumId } = this.props;
-    // TODO: FIND OUT HOW TO GET albumId PROP FROM URL PATH
+    const {
+      match: {
+        params: { albumId }
+      }
+    } = this.props;
     const { photos } = await apiFetch(`/albums/${albumId}/photos`);
     return photos || [];
   }

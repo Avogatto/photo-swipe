@@ -78,15 +78,15 @@ class App extends Component {
 
               <PrivateRoute
                 authenticated={authenticated}
-                path="/list-albums"
-                component={ListAlbums}
+                path="/albums/:albumId/photos"
+                component={ListPhotos}
                 logout={this.logout}
               />
 
               <PrivateRoute
                 authenticated={authenticated}
-                path="/list-photos"
-                component={ListPhotos}
+                path="/albums"
+                component={ListAlbums}
                 logout={this.logout}
               />
 

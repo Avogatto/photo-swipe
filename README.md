@@ -3,7 +3,7 @@
 ## Run the app
 
 1. Run react server: `npm start-app`
-2. Run node server: `npm run start-server-dev`
+2. Run node server (see output for port): `npm run start-server-dev`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

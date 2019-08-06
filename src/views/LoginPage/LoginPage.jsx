@@ -1,49 +1,29 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-// @material-ui/core components
-import withStyles from '@material-ui/core/styles/withStyles';
-// core components
-import Header from '../../components/Header/Header.jsx';
-import HeaderLinks from '../../components/Header/HeaderLinks.jsx';
-import Footer from '../../components/Footer/Footer.jsx';
-import GridContainer from '../../components/Grid/GridContainer.jsx';
-import GridItem from '../../components/Grid/GridItem.jsx';
-import OAuth from '../../custom/OAuth.jsx';
+import React from "react";
+import { Redirect } from "react-router-dom";
+import OAuth from "../../components/OAuth/OAuth.jsx";
+import "./LoginPage.css";
 
-import loginPageStyle from '../../assets/jss/material-kit-react/views/loginPage.jsx';
+export default function(props) {
+  const { authenticated, location, login, socket } = props;
+  const { from } = location.state || { from: { pathname: "/" } };
 
-class LoginPage extends React.Component {
-  render() {
-    const { authenticated, location, login, socket } = this.props;
-    const { from } = location.state || { from: { pathname: '/' } };
-
-    if (authenticated === true) {
-      return <Redirect to={from} />
-    }
-
-    const { classes, ...rest } = this.props;
-    return (
-      <div>
-        <Header
-          absolute
-          color='transparent'
-          brand='Photo Swipe'
-          rightLinks={<HeaderLinks authenticated={authenticated} />}
-          {...rest}
-        />
-        <div className={classes.pageHeader}>
-          <div className={classes.container}>
-            <GridContainer justify='center'>
-              <GridItem xs={12} sm={12} md={4}>
-                <OAuth login={login} socket={socket} />
-              </GridItem>
-            </GridContainer>
-          </div>
-          <Footer />
-        </div>
-      </div>
-    );
+  if (authenticated === true) {
+    return <Redirect to={from} />;
   }
-}
 
-export default withStyles(loginPageStyle)(LoginPage);
+  return (
+    <div className="login-page u-center-vertical u-center-text">
+      <header className="login-page__header">
+        <h1 className="title">
+          <span className="title__section">Photo</span>
+          <span className="title__section">Swipe</span>
+        </h1>
+      </header>
+      <main className="login-page__main">
+        <div className="row">
+          <OAuth login={login} socket={socket} />
+        </div>
+      </main>
+    </div>
+  );
+}

@@ -1,3 +1,5 @@
+// https://github.com/googlesamples/google-photos/blob/master/REST/PhotoFrame/app.js
+
 const { URLSearchParams } = require('url');
 const persist = require('node-persist');
 const fetch = require('node-fetch');
@@ -5,6 +7,7 @@ const {
   apiBase,
   requests: { albumPageSize, searchPageSize }
 } = require('../config');
+const { getShareTokens } = require('./user');
 
 let albumCache = null;
 let sharedAlbumCache = null;
@@ -59,6 +62,16 @@ async function joinAlbum(userToken, userId, shareToken) {
   return result;
 }
 
+async function joinPendingAlbums(userToken, userId) {
+  const shareTokens = getShareTokens(userId);
+  const joinAllPromises = shareTokens.map(token => {
+    return async () => {
+      return joinAlbum(userToken, userId, token);
+    };
+  });
+  return Promise.all(joinAllPromises);
+}
+
 async function shareAlbum(userToken, userId, albumId) {
   const endpoint = `albums/${albumId}:share`;
   const params = { method: 'POST' };
@@ -66,7 +79,7 @@ async function shareAlbum(userToken, userId, albumId) {
     sharedAlbumOptions: {
       isCollaborative: false,
       isCommentable: true,
-    }
+    },
   };
   const result = await fetchJson({ body, endpoint, params, userToken });
   console.log('WE GOT A RESULT', result);
@@ -77,7 +90,12 @@ async function shareAlbum(userToken, userId, albumId) {
 async function createAlbum(userToken, userId, title) {
   const params = { method: 'POST' };
   const body = { album: { title } };
-  const album = await fetchJson({ body, endpoint: 'albums', params, userToken });
+  const album = await fetchJson({
+    body,
+    endpoint: 'albums',
+    params,
+    userToken,
+  });
   console.log('THIS IS RESULT', album);
   await albumCache.removeItem(userId);
   return album;
@@ -88,16 +106,17 @@ async function getPaginatedAlbumsList(userToken, endpoint) {
   let albums = null;
   let searchParams = {
     pageSize: albumPageSize,
-    excludeNonAppCreatedData: true
+    excludeNonAppCreatedData: true,
   };
   do {
-    const result = await fetchJson({ endpoint, searchParams, userToken }) || {};
+    const result =
+      (await fetchJson({ endpoint, searchParams, userToken })) || {};
     albums = result[endpoint];
     if (albums) {
       console.log(`Number of ${endpoint} received: ${albums.length}`);
       albumsList = albumsList.concat(albums);
     }
-    searchParams = { ...searchParams, pageToken: result.nextPageToken } ;
+    searchParams = { ...searchParams, pageToken: result.nextPageToken };
   } while (searchParams.pageToken);
 
   console.log(`${endpoint} loaded.`);
@@ -110,7 +129,7 @@ async function getAlbums(userToken, userId) {
     console.log('Loaded albums from cache.');
     return cachedAlbums;
   }
-    console.log('Loading albums from API.');
+  console.log('Loading albums from API.');
   try {
     const data = await getPaginatedAlbumsList(userToken, 'albums');
     await albumCache.setItem(userId, data);
@@ -129,7 +148,7 @@ async function getAlbumPhotos(userToken, albumId) {
   }
   console.log('Loading album photos from API.');
   try {
-    const params = { method: 'POST'};
+    const params = { method: 'POST' };
     const endpoint = 'mediaItems:search';
     let photosList = [];
     let photos = null;
@@ -141,7 +160,7 @@ async function getAlbumPhotos(userToken, albumId) {
         console.log(`Number of photos received: ${photos.length}`);
         photosList = photosList.concat(photos);
       }
-      body = { ...body, pageToken: result.nextPageToken } ;
+      body = { ...body, pageToken: result.nextPageToken };
     } while (body.pageToken);
 
     console.log('Photos loaded for album');
@@ -159,7 +178,7 @@ async function getSharedAlbums(userToken, userId) {
     console.log('Loaded shared albums from cache.');
     return cachedAlbums;
   }
-    console.log('Loading shared albums from API.');
+  console.log('Loading shared albums from API.');
   try {
     const data = await getPaginatedAlbumsList(userToken, 'sharedAlbums');
     await sharedAlbumCache.setItem(userId, data);
@@ -177,5 +196,6 @@ module.exports = {
   getSharedAlbums,
   initializeCache,
   joinAlbum,
+  joinPendingAlbums,
   shareAlbum,
-}
+};

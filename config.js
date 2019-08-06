@@ -1,5 +1,5 @@
 module.exports = {
-  apiBase: 'https://photoslibrary.googleapis.com/v1',
+  apiBase: "https://photoslibrary.googleapis.com/v1",
   oAuth: {
     callbackURL: `${process.env.REACT_APP_API_BASE}/auth/callback`,
     clientID: `${process.env.CLIENT_ID}.apps.googleusercontent.com`,
@@ -10,9 +10,10 @@ module.exports = {
     failureFlash: true,
     prompt: 'consent',
     scope: [
-      'https://www.googleapis.com/auth/photoslibrary.sharing',
-      'https://www.googleapis.com/auth/photoslibrary.readonly',
-      'profile'
+      "https://www.googleapis.com/auth/photoslibrary.sharing",
+      "https://www.googleapis.com/auth/photoslibrary.readonly",
+      "profile",
+      "email"
     ],
     session: true
   },

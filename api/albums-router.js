@@ -7,7 +7,7 @@ const {
   getSharedAlbums,
   joinAlbum,
   shareAlbum,
-} = require('./albums-controller');
+} = require('./albums');
 const { addShareToken } = require('./user');
 
 const router = Router();

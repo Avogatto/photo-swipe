@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const sessionFileStore = require('session-file-store');
 const passport = require('passport');
 const socketio = require('socket.io');
-const firebase = require("firebase");
+const firebase = require('firebase');
 
 firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 
@@ -53,8 +53,8 @@ async function startServer() {
   await initializeCache();
   const server = http.createServer(app);
   const io = socketio(server);
-  app.set("io", io);
-  server.listen(8080, () => console.log("listening on port 8080!"));
+  app.set('io', io);
+  server.listen(8080, () => console.log('listening on port 8080!'));
 }
 
 startServer();

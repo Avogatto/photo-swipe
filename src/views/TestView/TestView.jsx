@@ -1,23 +1,22 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
-import Header from "../../components/Header/Header.jsx";
+import React from 'react';
+import { Container, Header } from 'semantic-ui-react';
 
-import "./TestView.css";
+import TopBar from '../../components/Header/Header.jsx';
 
-export default function(props) {
-  return (
-    <div className="test-view">
-      <Header />
-      <main className="test-view__main u-center-vertical u-center-text">
-        <div className="row">
-          <button className="btn">Vasdfssadfsd</button>
-        </div>
-        <div className="row">
-          <div className="col-1-of-1">
-            <button className="btn">Casfsdfdsds</button>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+export default class TestView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return (
+      <div className="test-view">
+        <TopBar />
+        <Container text style={{ marginTop: '11rem' }}>
+          <Header as="h1">TestView</Header>
+        </Container>
+      </div>
+    );
+  }
 }

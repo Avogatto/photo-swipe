@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const sessionFileStore = require('session-file-store');
 const passport = require('passport');
 const socketio = require('socket.io');
-const firebase = require("firebase");
+const firebase = require('firebase');
 
 firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 
@@ -15,7 +15,7 @@ const { oAuth: oAuthConfig, session: sessionConfig } = require('../config');
 const authRouter = require('./auth-router');
 const albumsRouter = require('./albums-router');
 const checkToken = require('./middleware/check-token');
-const { initializeCache, joinPendingAlbums } = require('./albums-controller');
+const { initializeCache, joinPendingAlbums } = require('./albums');
 
 const app = express();
 const FileStore = sessionFileStore(session);
@@ -48,13 +48,14 @@ app.use('/auth', authRouter);
 
 app.use(checkToken);
 app.use('/albums', albumsRouter);
+app.use('/users', usersRouter);
 
 async function startServer() {
   await initializeCache();
   const server = http.createServer(app);
   const io = socketio(server);
-  app.set("io", io);
-  server.listen(8080, () => console.log("listening on port 8080!"));
+  app.set('io', io);
+  server.listen(8080, () => console.log('listening on port 8080!'));
 }
 
 startServer();

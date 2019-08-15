@@ -12,10 +12,9 @@ router.get('/users', async (req, res) => {
 });
 
 router.post('/users', async (req, res) => {
-  const userEmail = req.body.email;
-  const fullName = req.body.fullName;
+  const { userEmail, fullName, admin } = req.body;
   try {
-    await addAuthorisedUser(userEmail, fullName);
+    await addAuthorisedUser(userEmail, fullName, admin);
     return res.sendStatus(200);
   } catch (err) {
     return res.sendStatus('500').json(err);

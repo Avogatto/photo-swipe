@@ -53,7 +53,7 @@ async function getAuthorisedUsers() {
   }
 }
 
-async function addAuthorisedUser(userEmail, fullName) {
+async function addAuthorisedUser(userEmail, fullName, admin) {
   try {
     await db
       .collection('users')
@@ -62,6 +62,7 @@ async function addAuthorisedUser(userEmail, fullName) {
         {
           authorised: true,
           fullName,
+          admin,
         },
         { merge: true }
       );

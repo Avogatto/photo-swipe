@@ -1,16 +1,14 @@
-const { Router } = require("express");
-const uuid = require("uuid");
+const { Router } = require('express');
+const uuid = require('uuid');
 const {
   createAlbum,
   getAlbums,
   getAlbumPhotos,
   getSharedAlbums,
   joinAlbum,
-  shareAlbum
-} = require("./albums-controller");
-const {
-  addShareToken
-} = require('./user');
+  shareAlbum,
+} = require('./albums-controller');
+const { addShareToken } = require('./user');
 
 const router = Router();
 
@@ -19,28 +17,28 @@ router.post('/memberships', async (req, res) => {
   const userToken = req.user.token;
   const userId = req.user.profile.id;
 
-  console.log("who is user?", req.user);
+  console.log('who is user?', req.user);
 
   try {
     const album = await joinAlbum(userToken, userId, shareToken);
     res.json({ album });
   } catch (err) {
-    console.log("ERRRRRRR", err);
+    console.log('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
 
-router.post("/:albumId/share-token", async (req, res) => {
+router.post('/:albumId/share-token', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
   const userId = req.user.profile.id;
   const shareUser = req.body.shareUser;
   try {
     const album = await shareAlbum(userToken, userId, albumId, shareUser);
-    await addShareToken(shareUser)
+    await addShareToken(shareUser);
     res.json({ album });
   } catch (err) {
-    console.log("ERRRRRRR", err);
+    console.log('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
@@ -63,27 +61,27 @@ router.get('/shared', async (req, res) => {
 
   try {
     const albums = await getSharedAlbums(userToken, userId);
-    console.log("Total number of shared albums:", albums.length);
+    console.log('Total number of shared albums:', albums.length);
     res.json({ albums });
   } catch (err) {
-    console.log("ERRRRRRR", err);
+    console.log('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   const userToken = req.user.token;
   const userId = req.user.profile.id;
   try {
     const albums = await getAlbums(userToken, userId);
-    console.log("Total number of albums:", albums.length);
+    console.log('Total number of albums:', albums.length);
     res.json({ albums });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   const userToken = req.user.token;
   const userId = req.user.profile.id;
   const title = `PS Album ${uuid.v4()}`;
@@ -91,7 +89,7 @@ router.post("/", async (req, res) => {
     const album = await createAlbum(userToken, userId, title);
     res.json({ album });
   } catch (err) {
-    console.log("ERRRRRRR", err);
+    console.log('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });

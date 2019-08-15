@@ -15,7 +15,7 @@ const { oAuth: oAuthConfig, session: sessionConfig } = require('../config');
 const authRouter = require('./auth-router');
 const albumsRouter = require('./albums-router');
 const checkToken = require('./middleware/check-token');
-const { initializeCache, joinPendingAlbums } = require('./albums-controller');
+const { initializeCache, joinPendingAlbums } = require('./albums');
 
 const app = express();
 const FileStore = sessionFileStore(session);
@@ -48,6 +48,7 @@ app.use('/auth', authRouter);
 
 app.use(checkToken);
 app.use('/albums', albumsRouter);
+app.use('/users', usersRouter);
 
 async function startServer() {
   await initializeCache();

@@ -7,7 +7,7 @@ router.get('/users', async (req, res) => {
     const users = await getAuthorizedUsers();
     return res.json(users);
   } catch (err) {
-    return res.sendStatus('500').json(err);
+    return res.sendStatus(500).json(err);
   }
 });
 
@@ -17,6 +17,6 @@ router.post('/users', async (req, res) => {
     await addAuthorizedUser(userEmail, fullName, admin);
     return res.sendStatus(200);
   } catch (err) {
-    return res.sendStatus('500').json(err);
+    return res.sendStatus(500).json(err);
   }
 });

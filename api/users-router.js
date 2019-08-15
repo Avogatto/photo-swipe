@@ -1,10 +1,10 @@
 const { Router } = require('express');
-const { addAuthorisedUser, getAuthorisedUsers } = require('./user');
+const { addAuthorizedUser, getAuthorizedUsers } = require('./user');
 const router = Router();
 
 router.get('/users', async (req, res) => {
   try {
-    const users = await getAuthorisedUsers();
+    const users = await getAuthorizedUsers();
     return res.json(users);
   } catch (err) {
     return res.sendStatus('500').json(err);
@@ -14,7 +14,7 @@ router.get('/users', async (req, res) => {
 router.post('/users', async (req, res) => {
   const { userEmail, fullName, admin } = req.body;
   try {
-    await addAuthorisedUser(userEmail, fullName, admin);
+    await addAuthorizedUser(userEmail, fullName, admin);
     return res.sendStatus(200);
   } catch (err) {
     return res.sendStatus('500').json(err);

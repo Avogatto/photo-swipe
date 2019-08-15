@@ -38,29 +38,29 @@ function getShareTokens(userEmail) {
     });
 }
 
-async function getAuthorisedUsers() {
+async function getAuthorizedUsers() {
   try {
     const results = await db
       .collection('users')
-      .where('authorised', '==', true)
+      .where('authorized', '==', true)
       .get();
     return results.map(doc => {
       return { email: doc.id, name: doc.name };
     });
   } catch (err) {
     console.error(err);
-    throw new Error('Could not retrieve list of authorised users.');
+    throw new Error('Could not retrieve list of authorized users.');
   }
 }
 
-async function addAuthorisedUser(userEmail, fullName, admin) {
+async function addAuthorizedUser(userEmail, fullName, admin) {
   try {
     await db
       .collection('users')
       .doc(userEmail)
       .set(
         {
-          authorised: true,
+          authorized: true,
           fullName,
           admin,
         },
@@ -69,13 +69,13 @@ async function addAuthorisedUser(userEmail, fullName, admin) {
     console.log('success!');
   } catch (err) {
     console.error(err);
-    throw new Error('Could not add authorised user.');
+    throw new Error('Could not add authorized user.');
   }
 }
 
 module.exports = {
   getShareTokens,
   addShareToken,
-  getAuthorisedUsers,
-  addAuthorisedUser,
+  getAuthorizedUsers,
+  addAuthorizedUser,
 };

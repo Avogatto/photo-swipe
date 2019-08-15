@@ -5,7 +5,7 @@
 ```typescript
 {
   shareTokens: string[];
-  authorised: boolean;
+  authorized: boolean;
   id: string; // email address
   fullName: string; // full name of user
   admin: boolean;

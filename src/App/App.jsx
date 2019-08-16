@@ -1,16 +1,18 @@
-import React, { Component } from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
-import io from "socket.io-client";
+import React, { Component } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import io from 'socket.io-client';
 
-import LandingPage from "../views/LandingPage/LandingPage.jsx";
-import LoginPage from "../views/LoginPage/LoginPage.jsx";
-import ListAlbums from "../views/ListAlbums/ListAlbums.jsx";
-import ListPhotos from "../views/ListPhotos/ListPhotos.jsx";
-import TestView from "../views/TestView/TestView.jsx";
+import LandingPage from '../views/LandingPage/LandingPage.jsx';
+import LoginPage from '../views/LoginPage/LoginPage.jsx';
+import ListAlbums from '../views/ListAlbums/ListAlbums.jsx';
+import ListPhotos from '../views/ListPhotos/ListPhotos.jsx';
+import ManageUsers from '../views/ManageUsers/ManageUsers.jsx';
 
-import PrivateRoute from "../components/PrivateRoute.jsx";
+import TestView from '../views/TestView/TestView.jsx';
 
-import "./App.css";
+import PrivateRoute from '../components/PrivateRoute.jsx';
+
+import './App.css';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 const socket = io(API_BASE);
@@ -32,7 +34,7 @@ class App extends Component {
 
   login(profile) {
     const { auth, history, location } = this.props;
-    const { from } = location.state || { from: { pathname: "/" } };
+    const { from } = location.state || { from: { pathname: '/' } };
     auth.saveProfile(profile);
     this.setState({ authenticated: true });
     history.push(from);
@@ -42,7 +44,7 @@ class App extends Component {
     const { auth, history } = this.props;
     await auth.logout();
     this.setState({ authenticated: false });
-    history.push("/login");
+    history.push('/login');
   }
 
   render() {
@@ -80,6 +82,13 @@ class App extends Component {
                 authenticated={authenticated}
                 path="/albums/:albumId/photos"
                 component={ListPhotos}
+                logout={this.logout}
+              />
+
+              <PrivateRoute
+                authenticated={authenticated}
+                path="/users"
+                component={ManageUsers}
                 logout={this.logout}
               />
 

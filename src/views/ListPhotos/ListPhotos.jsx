@@ -1,17 +1,10 @@
-import React from "react";
-import { apiFetch } from "../../utils/api";
+import React from 'react';
+import { apiFetch, fetchUserOptions } from '../../utils/api';
 
-import Header from "../../components/Header/Header.jsx";
-import TaggablePhoto from "../../components/TaggablePhoto/TaggablePhoto.jsx";
+import Header from '../../components/Header/Header.jsx';
+import TaggablePhoto from '../../components/TaggablePhoto/TaggablePhoto.jsx';
 
-import "./ListPhotos.css";
-
-const userList = [
-  { name: "Sara Rubin", email: "sara.rubin@example.com" },
-  { name: "Mackenzie Turner", email: "mackenzie.turner@example.com" },
-  { name: "John Smith", email: "john.smith@example.com" },
-  { name: "Jane Miller", email: "jane.miller@example.com" }
-];
+import './ListPhotos.css';
 
 export default class ListPhotos extends React.Component {
   constructor(props) {
@@ -22,26 +15,17 @@ export default class ListPhotos extends React.Component {
   async fetchPhotos() {
     const {
       match: {
-        params: { albumId }
-      }
+        params: { albumId },
+      },
     } = this.props;
     const { photos } = await apiFetch(`/albums/${albumId}/photos`);
     return photos || [];
   }
 
-  async fetchUserOptions() {
-    // const { userList } = await apiFetch(INSERT API CALL TO FETCH USER LIST);
-    return (userList || []).map(({ name, email }) => ({
-      key: email,
-      text: name,
-      value: email
-    }));
-  }
-
   async componentDidMount() {
     const [photos, userOptions] = await Promise.all([
       this.fetchPhotos(),
-      this.fetchUserOptions()
+      fetchUserOptions(),
     ]);
     this.setState({ photos, userOptions });
   }

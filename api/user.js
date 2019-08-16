@@ -21,7 +21,8 @@ function addShareToken(userEmail, shareToken) {
 }
 
 function getShareTokens(userEmail) {
-  db.collection('users')
+  return db
+    .collection('users')
     .doc(userEmail)
     .get()
     .then(user => {
@@ -40,12 +41,13 @@ function getShareTokens(userEmail) {
 
 async function getAuthorizedUsers() {
   try {
-    const results = await db
+    const { docs } = await db
       .collection('users')
       .where('authorized', '==', true)
       .get();
-    return results.map(doc => {
-      return { email: doc.id, name: doc.name };
+    return docs.map(doc => {
+      const { fullName } = doc.data();
+      return { userEmail: doc.id, fullName };
     });
   } catch (err) {
     console.error(err);

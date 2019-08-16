@@ -1,22 +1,45 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Dropdown, Image, Menu } from 'semantic-ui-react';
 
-import "./Header.css";
+import './Header.css';
 
 export default function(props) {
   return (
     <header className="header">
-      <div className="header__nav">
-        <FontAwesomeIcon icon={faBars} size="5x" />
-      </div>
-      <div className="header__avatar-box">
-        <img
+      <Menu
+        fixed="top"
+        inverted
+        style={{
+          paddingTop: '1rem',
+          paddingBottom: '1rem',
+        }}
+      >
+        <Container>
+          <Menu.Item as={Link} to="/" header>
+            Photo Swipe
+          </Menu.Item>
+          <Dropdown item simple text="Menu">
+            <Dropdown.Menu>
+              <Dropdown.Item as={Link} to="/users">
+                Manage Users
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to="/albums">
+                Manage Albums
+              </Dropdown.Item>
+              <Dropdown.Item>Create Album</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Container>
+        <Image
           src="https://media.giphy.com/media/xTiQyi2MvVQR1V3PLW/giphy.gif"
-          alt="avatar"
-          className="header__avatar-image"
+          size="small"
+          style={{
+            objectFit: 'cover',
+            clipPath: 'circle(35% at 50% 50%)',
+          }}
         />
-      </div>
+      </Menu>
     </header>
   );
 }

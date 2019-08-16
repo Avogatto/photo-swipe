@@ -14,6 +14,7 @@ firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 const { oAuth: oAuthConfig, session: sessionConfig } = require('../config');
 const authRouter = require('./auth-router');
 const albumsRouter = require('./albums-router');
+const usersRouter = require('./users-router');
 const checkToken = require('./middleware/check-token');
 const { initializeCache, joinPendingAlbums } = require('./albums');
 
@@ -25,13 +26,15 @@ passport.deserializeUser((user, done) => done(null, user));
 passport.use(
   new OAuth2Strategy(
     oAuthConfig,
-    // TODO: save the user to the database in this callback
     async (token, refreshToken, params, profile, done) => {
       const { expires_in: expiresIn } = params;
       const now = new Date();
       const expiry = now.setSeconds(now.getSeconds() + (expiresIn - 300));
+      const {
+        emails: [{ value: id }],
+      } = profile;
 
-      await joinPendingAlbums(token, profile.id);
+      await joinPendingAlbums(token, id);
 
       done(null, { profile, token, refreshToken, expiry });
     }

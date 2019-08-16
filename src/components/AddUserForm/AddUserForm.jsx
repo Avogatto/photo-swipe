@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, Message } from 'semantic-ui-react';
+import { createUser } from '../../utils/api';
 
 export default class AddUserForm extends React.Component {
   constructor(props) {
@@ -8,21 +9,23 @@ export default class AddUserForm extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-      name: '',
-      email: '',
+      fullName: '',
+      userEmail: '',
       admin: false,
       submitted: false,
     };
   }
 
   async handleSubmit() {
-    console.log('you submitted this!!!', this.state);
     const { updateUserList } = this.props;
-    // MAKE API CALL TO ADD USER HERE
+    const { fullName, userEmail, admin } = this.state;
+
+    await createUser({ fullName, userEmail, admin });
     await updateUserList();
+
     this.setState({
-      name: '',
-      email: '',
+      fullName: '',
+      userEmail: '',
       admin: false,
       submitted: true,
     });
@@ -37,7 +40,7 @@ export default class AddUserForm extends React.Component {
   }
 
   render() {
-    const { name, email, admin, submitted } = this.state;
+    const { fullName, userEmail, admin, submitted } = this.state;
 
     return (
       <div className="test-view">
@@ -47,8 +50,8 @@ export default class AddUserForm extends React.Component {
               control={Input}
               label="Full name"
               placeholder="Full name"
-              name="name"
-              value={name}
+              name="fullName"
+              value={fullName}
               onChange={this.handleInputChange}
               required
             />
@@ -56,9 +59,9 @@ export default class AddUserForm extends React.Component {
               control={Input}
               label="Email"
               placeholder="Email"
-              name="email"
+              name="userEmail"
               type="email"
-              value={email}
+              value={userEmail}
               onChange={this.handleInputChange}
               required
             />

@@ -15,7 +15,6 @@ export default class ManageUsers extends React.Component {
   }
 
   async updateUserList() {
-    console.log('YOU UPDATED THE USER LIST');
     const userOptions = await fetchUserOptions();
     this.setState({ userOptions });
   }

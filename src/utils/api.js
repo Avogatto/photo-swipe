@@ -1,17 +1,14 @@
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 
-/* MOCK DATA TO REPLACE LATER */
-const userList = [
-  { name: 'Sara Rubin', email: 'sara.rubin@example.com' },
-  { name: 'Mackenzie Turner', email: 'mackenzie.turner@example.com' },
-  { name: 'John Smith', email: 'john.smith@example.com' },
-  { name: 'Jane Miller', email: 'jane.miller@example.com' },
-];
-
 export async function apiFetch(endpoint, options) {
-  const fetchOpts = options || { credentials: 'include' };
+  const fetchOpts = {
+    ...options,
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+  };
   const url = `${API_BASE}${endpoint}`;
   let response;
+
   try {
     response = await fetch(url, fetchOpts);
     const contentType = response.headers.get('Content-Type');
@@ -22,11 +19,19 @@ export async function apiFetch(endpoint, options) {
   }
 }
 
-export async function fetchUserOptions(endpoint, options) {
-  // const { userList } = await apiFetch(INSERT API CALL TO FETCH USER LIST);
-  return (userList || []).map(({ name, email }) => ({
-    key: email,
-    text: name,
-    value: email,
+export async function fetchUserOptions() {
+  const { users } = await apiFetch('/users');
+  return users.map(({ fullName, userEmail }) => ({
+    key: userEmail,
+    text: fullName,
+    value: userEmail,
   }));
+}
+
+export async function createUser(user) {
+  const result = await apiFetch('/users', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  });
+  return result;
 }

@@ -5,7 +5,7 @@ const persist = require('node-persist');
 const fetch = require('node-fetch');
 const {
   apiBase,
-  requests: { albumPageSize, searchPageSize }
+  requests: { albumPageSize, searchPageSize },
 } = require('../config');
 const { getShareTokens } = require('./user');
 
@@ -29,14 +29,14 @@ async function initializeCache() {
   return Promise.all([
     albumCache.init(),
     mediaCache.init(),
-    sharedAlbumCache.init()
+    sharedAlbumCache.init(),
   ]);
 }
 
 async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
-  const searchParamsString = searchParams ?
-    `?${new URLSearchParams(searchParams).toString()}` :
-    '';
+  const searchParamsString = searchParams
+    ? `?${new URLSearchParams(searchParams).toString()}`
+    : '';
   const fullUrl = `${apiBase}/${endpoint}${searchParamsString}`;
   console.log('Making request to:', fullUrl);
   const response = await fetch(fullUrl, {
@@ -63,7 +63,7 @@ async function joinAlbum(userToken, userId, shareToken) {
 }
 
 async function joinPendingAlbums(userToken, userId) {
-  const shareTokens = getShareTokens(userId);
+  const shareTokens = await getShareTokens(userId);
   const joinAllPromises = shareTokens.map(token => {
     return async () => {
       return joinAlbum(userToken, userId, token);

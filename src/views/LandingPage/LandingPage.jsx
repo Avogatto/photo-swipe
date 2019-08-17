@@ -1,13 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
-import Header from "../../components/Header/Header.jsx";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function(props) {
-  const { authenticated, classes, logout, ...rest } = props;
   return (
     <div className="landing-page">
-      <Header />
       <main className="landing-page__content u-center-vertical u-center-text">
         <div className="row">
           <Link to="/albums">

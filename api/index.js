@@ -8,6 +8,7 @@ const sessionFileStore = require('session-file-store');
 const passport = require('passport');
 const socketio = require('socket.io');
 const firebase = require('firebase');
+const morgan = require('morgan');
 
 firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 
@@ -41,6 +42,7 @@ passport.use(
   )
 );
 
+app.use(morgan('dev'));
 app.use(cors({ origin: process.env.REACT_APP_BASE, credentials: true }));
 app.use(bodyParser.json());
 app.use(session({ ...sessionConfig, store: new FileStore({}) }));

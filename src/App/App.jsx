@@ -11,6 +11,7 @@ import ManageUsers from '../views/ManageUsers/ManageUsers.jsx';
 import TestView from '../views/TestView/TestView.jsx';
 
 import PrivateRoute from '../components/PrivateRoute.jsx';
+import Header from '../components/Header/Header.jsx';
 
 import './App.css';
 
@@ -49,6 +50,8 @@ class App extends Component {
 
   render() {
     const { authenticated, mounted } = this.state;
+    const { auth } = this.props;
+
     return (
       <div className="app">
         {mounted && (
@@ -69,16 +72,20 @@ class App extends Component {
               <Route
                 path="/test-route"
                 render={props => (
-                  <TestView
-                    {...props}
-                    authenticated={authenticated}
-                    login={this.login}
-                    socket={socket}
-                  />
+                  <div className="wrapper">
+                    <Header auth={auth} />
+                    <TestView
+                      {...props}
+                      authenticated={authenticated}
+                      login={this.login}
+                      socket={socket}
+                    />
+                  </div>
                 )}
               />
 
               <PrivateRoute
+                auth={auth}
                 authenticated={authenticated}
                 path="/albums/:albumId/photos"
                 component={ListPhotos}
@@ -86,6 +93,7 @@ class App extends Component {
               />
 
               <PrivateRoute
+                auth={auth}
                 authenticated={authenticated}
                 path="/users"
                 component={ManageUsers}
@@ -93,6 +101,7 @@ class App extends Component {
               />
 
               <PrivateRoute
+                auth={auth}
                 authenticated={authenticated}
                 path="/albums"
                 component={ListAlbums}
@@ -100,6 +109,7 @@ class App extends Component {
               />
 
               <PrivateRoute
+                auth={auth}
                 authenticated={authenticated}
                 path="/"
                 component={LandingPage}

@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch } from './api';
 
 export default class Auth {
   constructor() {
@@ -18,11 +18,11 @@ export default class Auth {
     // return new Date().getTime() < this.expiresAt; // make sure to set this prop
     if (this.authenticated === null /* or check experation */) {
       try {
-        const result = await apiFetch("/auth/session");
-        this.authenticated = Boolean(result.profile);
-        if (result.profile) this.profile = result.profile;
+        const { profile } = await apiFetch('/auth/session');
+        this.authenticated = Boolean(profile);
+        if (profile) this.profile = profile;
       } catch (err) {
-        console.error("failed to confirm authenticated", err);
+        console.error('failed to confirm authenticated', err);
       }
     }
     return this.authenticated;
@@ -30,19 +30,18 @@ export default class Auth {
 
   async logout() {
     try {
-      await apiFetch("/auth/logout");
+      await apiFetch('/auth/logout');
       this.authenticated = false;
     } catch (err) {
-      console.error("failed to logout", err.toString());
+      console.error('failed to logout', err.toString());
     }
   }
 
-  saveProfile(profile) {
-    if (profile) {
-      console.log("this is profile!", profile);
-
+  saveProfile(user) {
+    if (user) {
+      console.log('this is user!', user);
       this.authenticated = true;
-      this.profile = profile;
+      this.profile = user.profile;
     }
   }
 }

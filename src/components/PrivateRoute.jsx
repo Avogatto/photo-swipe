@@ -1,14 +1,36 @@
-import React from 'react'
+import React from 'react';
 import { Redirect, Route, withRouter } from 'react-router-dom';
 
-function PrivateRoute(props) {
-  const { authenticated, component: Component, location, logout, ...rest } = props;
+import Header from './Header/Header.jsx';
+
+function PrivateRoute(topProps) {
+  const {
+    auth,
+    authenticated,
+    component: Component,
+    location,
+    logout,
+    ...rest
+  } = topProps;
+
   return (
-        <Route {...rest} render={(props) => (
-          authenticated ?
-            <Component {...props} authenticated={authenticated} logout={logout} /> :
-            <Redirect to={{ pathname: '/login', state: { from: location } }} />
-        )} />
+    <Route
+      {...rest}
+      render={props =>
+        authenticated ? (
+          <div className="wrapper">
+            <Header auth={auth} />
+            <Component
+              {...props}
+              authenticated={authenticated}
+              logout={logout}
+            />
+          </div>
+        ) : (
+          <Redirect to={{ pathname: '/login', state: { from: location } }} />
+        )
+      }
+    />
   );
 }
 

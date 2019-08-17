@@ -25,8 +25,10 @@ export default function(props) {
           </Dropdown.Menu>
         </Dropdown>
 
+        <Menu.Item onClick={auth.logout}>Logout</Menu.Item>
+
         <Menu.Item position="right">
-          <Image src={image} avatar size="tiny" />
+          <Image src={image} avatar size="mini" />
         </Menu.Item>
       </Menu>
     </header>

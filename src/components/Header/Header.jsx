@@ -21,7 +21,9 @@ export default function(props) {
             <Dropdown.Item as={Link} to="/albums">
               Manage Albums
             </Dropdown.Item>
-            <Dropdown.Item>Create Album</Dropdown.Item>
+            <Dropdown.Item as={Link} to="/new-album">
+              Create Album
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
 

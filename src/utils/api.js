@@ -35,3 +35,11 @@ export async function createUser(user) {
   });
   return result;
 }
+
+export async function createAlbum(album) {
+  const result = await apiFetch('/albums', {
+    method: 'POST',
+    body: JSON.stringify(album),
+  });
+  return result;
+}

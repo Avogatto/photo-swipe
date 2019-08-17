@@ -10,12 +10,6 @@ export default class ListAlbums extends React.Component {
 
   async componentDidMount() {
     const { albums } = await apiFetch(`/albums`);
-    const [album] = albums;
-
-    for (let i = 0; i < 7; i += 1) {
-      albums.push(album);
-    }
-
     this.setState({ albums: albums || [] });
   }
 

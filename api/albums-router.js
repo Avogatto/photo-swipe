@@ -84,7 +84,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const userToken = req.user.token;
   const userId = req.user.profile.id;
-  const title = `PS Album ${uuid.v4()}`;
+  const title = `PS Album: ${req.body.albumTitle}`;
   try {
     const album = await createAlbum(userToken, userId, title);
     res.json({ album });

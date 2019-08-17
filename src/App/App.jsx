@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 
 import LandingPage from '../views/LandingPage/LandingPage.jsx';
 import LoginPage from '../views/LoginPage/LoginPage.jsx';
+import CreateAlbum from '../views/CreateAlbum/CreateAlbum.jsx';
 import ListAlbums from '../views/ListAlbums/ListAlbums.jsx';
 import ListPhotos from '../views/ListPhotos/ListPhotos.jsx';
 import ManageUsers from '../views/ManageUsers/ManageUsers.jsx';
@@ -68,6 +69,11 @@ class App extends Component {
               />
               <PrivateRoute auth={auth} path="/users" component={ManageUsers} />
               <PrivateRoute auth={auth} path="/albums" component={ListAlbums} />
+              <PrivateRoute
+                auth={auth}
+                path="/new-album"
+                component={CreateAlbum}
+              />
               <PrivateRoute auth={auth} path="/" component={LandingPage} />
             </Switch>
           </div>

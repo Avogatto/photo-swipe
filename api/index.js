@@ -1,4 +1,5 @@
 const http = require('http');
+const path = require('path');
 const cors = require('cors');
 const { OAuth2Strategy } = require('passport-google-oauth');
 const express = require('express');
@@ -42,6 +43,7 @@ passport.use(
   )
 );
 
+app.use(express.static(path.join(__dirname, '../build')));
 app.use(morgan('dev'));
 app.use(cors({ origin: process.env.REACT_APP_BASE, credentials: true }));
 app.use(bodyParser.json());
@@ -50,17 +52,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/auth', authRouter);
+app.use('/albums', checkToken, albumsRouter);
+app.use('/users', checkToken, usersRouter);
 
-app.use(checkToken);
-app.use('/albums', albumsRouter);
-app.use('/users', usersRouter);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '../build/index.html'));
+});
 
 async function startServer() {
   await initializeCache();
   const server = http.createServer(app);
   const io = socketio(server);
+  const port = process.env.PORT || 8080;
   app.set('io', io);
-  server.listen(8080, () => console.log('listening on port 8080!'));
+  server.listen(port, () => console.log(`listening on port ${port}!`));
 }
 
 startServer();

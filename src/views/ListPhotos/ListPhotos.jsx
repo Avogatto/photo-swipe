@@ -1,7 +1,6 @@
 import React from 'react';
 import { apiFetch, fetchUserOptions } from '../../utils/api';
 
-import Header from '../../components/Header/Header.jsx';
 import TaggablePhoto from '../../components/TaggablePhoto/TaggablePhoto.jsx';
 
 import './ListPhotos.css';
@@ -64,11 +63,9 @@ export default class ListPhotos extends React.Component {
 
   render() {
     const { authenticated, classes, logout, ...rest } = this.props;
-    // const image = 'https://media.giphy.com/media/dLswRvqOSDfEI/giphy.gif';
     const items = this.renderItems();
     return (
       <div className="list-photos">
-        <Header />
         <main className="list-photos__main">
           <div className="row">
             <h1 className="list-albums__header u-margin-top-medium">Photos</h1>

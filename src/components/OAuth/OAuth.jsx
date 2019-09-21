@@ -1,6 +1,5 @@
-import React, { Component } from "react";
-// import PropTypes from 'prop-types';
-import "./OAuth.css";
+import React, { Component } from 'react';
+import './OAuth.css';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 
@@ -14,10 +13,10 @@ class OAuth extends Component {
   }
 
   componentDidMount() {
-    const { login, socket } = this.props;
-    socket.on("authenticated", user => {
+    const { auth, socket } = this.props;
+    socket.on('authenticated', user => {
       this.popup.close();
-      login(user);
+      auth.login(user);
     });
     // TODO: add on('error')
   }
@@ -46,7 +45,7 @@ class OAuth extends Component {
 
     return window.open(
       url,
-      "",
+      '',
       `toolbar=no, location=no, directories=no, status=no, menubar=no,
       scrollbars=no, resizable=no, copyhistory=no, width=${width},
       height=${height}, top=${top}, left=${left}`

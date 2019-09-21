@@ -1,8 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { apiFetch } from "../../utils/api";
-
-import Header from "../../components/Header/Header.jsx";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { apiFetch } from '../../utils/api';
 
 export default class ListAlbums extends React.Component {
   constructor(props) {
@@ -12,12 +10,6 @@ export default class ListAlbums extends React.Component {
 
   async componentDidMount() {
     const { albums } = await apiFetch(`/albums`);
-    const [album] = albums;
-
-    for (let i = 0; i < 7; i += 1) {
-      albums.push(album);
-    }
-
     this.setState({ albums: albums || [] });
   }
 
@@ -54,11 +46,9 @@ export default class ListAlbums extends React.Component {
   }
 
   render() {
-    // const { authenticated, classes, logout, ...rest } = this.props;
     const items = this.renderItems();
     return (
       <div className="list-albums">
-        <Header />
         <main className="list-albums__main">
           <div className="row">
             <h1 className="list-albums__header u-margin-top-medium">Albums</h1>

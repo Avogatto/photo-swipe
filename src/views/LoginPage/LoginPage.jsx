@@ -1,11 +1,13 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
-import OAuth from "../../components/OAuth/OAuth.jsx";
-import "./LoginPage.css";
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import OAuth from '../../components/OAuth/OAuth.jsx';
+import './LoginPage.css';
 
 export default function(props) {
-  const { authenticated, location, login, socket } = props;
-  const { from } = location.state || { from: { pathname: "/" } };
+  const { auth, location, socket } = props;
+  const { from } = location.state || { from: { pathname: '/' } };
+
+  const authenticated = auth.isAuthenticated();
 
   if (authenticated === true) {
     return <Redirect to={from} />;
@@ -21,7 +23,7 @@ export default function(props) {
       </header>
       <main className="login-page__main">
         <div className="row">
-          <OAuth login={login} socket={socket} />
+          <OAuth auth={auth} socket={socket} />
         </div>
       </main>
     </div>

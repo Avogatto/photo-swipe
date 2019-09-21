@@ -12,7 +12,6 @@ export default class TestView extends React.Component {
   render() {
     return (
       <div className="test-view">
-        <TopBar />
         <Container text style={{ marginTop: '11rem' }}>
           <Header as="h1">TestView</Header>
         </Container>

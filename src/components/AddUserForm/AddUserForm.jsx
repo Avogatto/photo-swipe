@@ -31,11 +31,11 @@ export default class AddUserForm extends React.Component {
     });
   }
 
-  async handleInputChange(e, { name, value }) {
+  handleInputChange(e, { name, value }) {
     this.setState({ [name]: value, submitted: false });
   }
 
-  async handleCheckChange(e, { name, checked }) {
+  handleCheckChange(e, { name, checked }) {
     this.setState({ [name]: checked, submitted: false });
   }
 
@@ -44,7 +44,11 @@ export default class AddUserForm extends React.Component {
 
     return (
       <div className="test-view">
-        <Form success={submitted} onSubmit={this.handleSubmit}>
+        <Form
+          success={submitted}
+          onSubmit={this.handleSubmit}
+          autocomplete="off"
+        >
           <Form.Group widths="equal">
             <Form.Field
               control={Input}

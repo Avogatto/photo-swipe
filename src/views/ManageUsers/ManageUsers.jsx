@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Dropdown, Header } from 'semantic-ui-react';
 import { fetchUserOptions } from '../../utils/api';
 
-import TopBar from '../../components/Header/Header.jsx';
 import AddUserForm from '../../components/AddUserForm/AddUserForm.jsx';
 
 export default class ManageUsers extends React.Component {
@@ -28,7 +27,6 @@ export default class ManageUsers extends React.Component {
 
     return (
       <div className="test-view">
-        <TopBar />
         <Container text style={{ marginTop: '11rem' }}>
           <Header as="h1">Search existing users</Header>
           <Dropdown

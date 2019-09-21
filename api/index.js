@@ -1,6 +1,5 @@
 const http = require('http');
 const path = require('path');
-const cors = require('cors');
 const { OAuth2Strategy } = require('passport-google-oauth');
 const express = require('express');
 const session = require('express-session');
@@ -45,7 +44,6 @@ passport.use(
 
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(morgan('dev'));
-app.use(cors({ origin: process.env.REACT_APP_BASE, credentials: true }));
 app.use(bodyParser.json());
 app.use(session({ ...sessionConfig, store: new FileStore({}) }));
 app.use(passport.initialize());

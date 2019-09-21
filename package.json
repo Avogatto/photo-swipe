@@ -8,6 +8,7 @@
     "clear-cache": "rm -rf persist-albumcache persist-sharedalbumcache",
     "eject": "react-scripts eject",
     "start-app": "react-scripts start",
+    "start": "npm run start-server",
     "start-server": "node ./api/index.js",
     "start-server-dev": "npm run clear-cache && nodemon --ignore sessions/ --ignore persist-*/ -r dotenv/config ./api/index.js",
     "test": "react-scripts test"

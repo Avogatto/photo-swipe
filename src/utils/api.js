@@ -1,4 +1,4 @@
-export async function apiFetch(endpoint, options) {
+export async function makeRequest(endpoint, options) {
   const fetchOpts = {
     ...options,
     credentials: 'include',
@@ -11,12 +11,12 @@ export async function apiFetch(endpoint, options) {
     if (contentType && contentType.includes('json')) return response.json();
     return response.text();
   } catch (err) {
-    console.log(`failed to make fetch request to ${endpoint}`, err.toString());
+    console.log(`failed to make request to ${endpoint}`, err.toString());
   }
 }
 
 export async function fetchUserOptions() {
-  const { users } = await apiFetch('/users');
+  const { users } = await makeRequest('/api/users');
   return users.map(({ fullName, userEmail }) => ({
     key: userEmail,
     text: fullName,
@@ -24,8 +24,18 @@ export async function fetchUserOptions() {
   }));
 }
 
+export async function fetchPhotos(albumId) {
+  const { photos } = await makeRequest(`/api/albums/${albumId}/photos`);
+  return photos || [];
+}
+
+export async function fetchAlbums() {
+  const { albums } = await makeRequest('/api/albums');
+  return albums || [];
+}
+
 export async function createUser(user) {
-  const result = await apiFetch('/users', {
+  const result = await makeRequest('/api/users', {
     method: 'POST',
     body: JSON.stringify(user),
   });
@@ -33,7 +43,7 @@ export async function createUser(user) {
 }
 
 export async function createAlbum(album) {
-  const result = await apiFetch('/albums', {
+  const result = await makeRequest('/api/albums', {
     method: 'POST',
     body: JSON.stringify(album),
   });

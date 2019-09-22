@@ -34,7 +34,7 @@ export default class CreateAlbum extends React.Component {
 
     return (
       <div className="create-album">
-        <Container text style={{ marginTop: '11rem' }}>
+        <Container text>
           <Header as="h1">Create New Album</Header>
           <Form
             success={submitted}

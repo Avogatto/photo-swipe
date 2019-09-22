@@ -17,9 +17,10 @@ const authRouter = require('./auth-router');
 const albumsRouter = require('./albums-router');
 const usersRouter = require('./users-router');
 const checkToken = require('./middleware/check-token');
-const { initializeCache, joinPendingAlbums } = require('./albums');
+const { joinPendingAlbums } = require('./albums');
 
 const app = express();
+const apiRouter = express.Router();
 const FileStore = sessionFileStore(session);
 
 passport.serializeUser((user, done) => done(null, user));
@@ -49,21 +50,18 @@ app.use(session({ ...sessionConfig, store: new FileStore({}) }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+apiRouter.use('/albums', albumsRouter);
+apiRouter.use('/users', usersRouter);
+
 app.use('/auth', authRouter);
-app.use('/albums', checkToken, albumsRouter);
-app.use('/users', checkToken, usersRouter);
+app.use('/api', checkToken, apiRouter);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '../build/index.html'));
+  res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
-async function startServer() {
-  await initializeCache();
-  const server = http.createServer(app);
-  const io = socketio(server);
-  const port = process.env.PORT || 8080;
-  app.set('io', io);
-  server.listen(port, () => console.log(`listening on port ${port}!`));
-}
-
-startServer();
+const server = http.createServer(app);
+const io = socketio(server);
+const port = process.env.PORT || 8080;
+app.set('io', io);
+server.listen(port, () => console.log(`listening on port ${port}!`));

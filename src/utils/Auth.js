@@ -1,4 +1,4 @@
-import { apiFetch } from './api';
+import { makeRequest } from './api';
 
 export default class Auth {
   constructor() {
@@ -18,7 +18,7 @@ export default class Auth {
   async initialize(getRouteProps) {
     this.getRouteProps = getRouteProps;
     try {
-      const { profile } = await apiFetch('/auth/session');
+      const { profile } = await makeRequest('/auth/session');
       this.authenticated = Boolean(profile);
       if (profile) this.profile = profile;
     } catch (err) {
@@ -46,7 +46,7 @@ export default class Auth {
   async logout() {
     const { history } = this.getRouteProps();
     try {
-      await apiFetch('/auth/logout');
+      await makeRequest('/auth/logout');
       this.authenticated = false;
       history.push('/login');
     } catch (err) {

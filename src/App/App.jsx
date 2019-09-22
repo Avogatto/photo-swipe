@@ -71,7 +71,7 @@ class App extends Component {
               <PrivateRoute auth={auth} path="/albums" component={ListAlbums} />
               <PrivateRoute
                 auth={auth}
-                path="/new-album"
+                path="/create-album"
                 component={CreateAlbum}
               />
               <PrivateRoute auth={auth} path="/" component={LandingPage} />

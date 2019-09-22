@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const uuid = require('uuid');
 const {
   createAlbum,
   getAlbums,

@@ -1,37 +1,12 @@
 // https://github.com/googlesamples/google-photos/blob/master/REST/PhotoFrame/app.js
 
 const { URLSearchParams } = require('url');
-const persist = require('node-persist');
 const fetch = require('node-fetch');
 const {
   apiBase,
   requests: { albumPageSize, searchPageSize },
 } = require('../config');
 const { getShareTokens } = require('./user');
-
-let albumCache = null;
-let sharedAlbumCache = null;
-let mediaCache = null;
-
-async function initializeCache() {
-  albumCache = persist.create({
-    dir: 'persist-albumcache/',
-    ttl: 600000,
-  });
-  mediaCache = persist.create({
-    dir: 'persist-mediacache/',
-    ttl: 600000,
-  });
-  sharedAlbumCache = persist.create({
-    dir: 'persist-sharedalbumcache/',
-    ttl: 600000,
-  });
-  return Promise.all([
-    albumCache.init(),
-    mediaCache.init(),
-    sharedAlbumCache.init(),
-  ]);
-}
 
 async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
   const searchParamsString = searchParams
@@ -58,7 +33,6 @@ async function joinAlbum(userToken, userId, shareToken) {
   const body = { shareToken };
   const result = await fetchJson({ body, endpoint, params, userToken });
   console.log('WE GOT A RESULT', result);
-  await sharedAlbumCache.removeItem(userId);
   return result;
 }
 
@@ -83,7 +57,6 @@ async function shareAlbum(userToken, userId, albumId) {
   };
   const result = await fetchJson({ body, endpoint, params, userToken });
   console.log('WE GOT A RESULT', result);
-  await sharedAlbumCache.removeItem(userId);
   return result;
 }
 
@@ -97,7 +70,6 @@ async function createAlbum(userToken, userId, title) {
     userToken,
   });
   console.log('THIS IS RESULT', album);
-  await albumCache.removeItem(userId);
   return album;
 }
 
@@ -123,70 +95,35 @@ async function getPaginatedAlbumsList(userToken, endpoint) {
   return albumsList;
 }
 
-async function getAlbums(userToken, userId) {
-  const cachedAlbums = await albumCache.getItem(userId);
-  if (cachedAlbums) {
-    console.log('Loaded albums from cache.');
-    return cachedAlbums;
-  }
+function getAlbums(userToken, userId) {
   console.log('Loading albums from API.');
-  try {
-    const data = await getPaginatedAlbumsList(userToken, 'albums');
-    await albumCache.setItem(userId, data);
-    return data;
-  } catch (err) {
-    await albumCache.removeItem(userId);
-    throw err;
-  }
+  return getPaginatedAlbumsList(userToken, 'albums');
 }
 
 async function getAlbumPhotos(userToken, albumId) {
-  const cachedPhotos = await mediaCache.getItem(albumId);
-  if (cachedPhotos) {
-    console.log('Loaded album photos from cache.');
-    return cachedPhotos;
-  }
   console.log('Loading album photos from API.');
-  try {
-    const params = { method: 'POST' };
-    const endpoint = 'mediaItems:search';
-    let photosList = [];
-    let photos = null;
-    let body = { albumId, pageSize: searchPageSize };
-    do {
-      const result = await fetchJson({ body, endpoint, params, userToken });
-      ({ mediaItems: photos } = result || {});
-      if (photos) {
-        console.log(`Number of photos received: ${photos.length}`);
-        photosList = photosList.concat(photos);
-      }
-      body = { ...body, pageToken: result.nextPageToken };
-    } while (body.pageToken);
+  const params = { method: 'POST' };
+  const endpoint = 'mediaItems:search';
+  let photosList = [];
+  let photos = null;
+  let body = { albumId, pageSize: searchPageSize };
+  do {
+    const result = await fetchJson({ body, endpoint, params, userToken });
+    ({ mediaItems: photos } = result || {});
+    if (photos) {
+      console.log(`Number of photos received: ${photos.length}`);
+      photosList = photosList.concat(photos);
+    }
+    body = { ...body, pageToken: result.nextPageToken };
+  } while (body.pageToken);
 
-    console.log('Photos loaded for album');
-    await mediaCache.setItem(albumId, photosList);
-    return photosList;
-  } catch (err) {
-    await mediaCache.removeItem(albumId);
-    throw err;
-  }
+  console.log('Photos loaded for album');
+  return photosList;
 }
 
-async function getSharedAlbums(userToken, userId) {
-  const cachedAlbums = await sharedAlbumCache.getItem(userId);
-  if (cachedAlbums) {
-    console.log('Loaded shared albums from cache.');
-    return cachedAlbums;
-  }
+function getSharedAlbums(userToken, userId) {
   console.log('Loading shared albums from API.');
-  try {
-    const data = await getPaginatedAlbumsList(userToken, 'sharedAlbums');
-    await sharedAlbumCache.setItem(userId, data);
-    return data;
-  } catch (err) {
-    await sharedAlbumCache.removeItem(userId);
-    throw err;
-  }
+  return getPaginatedAlbumsList(userToken, 'sharedAlbums');
 }
 
 module.exports = {
@@ -194,7 +131,6 @@ module.exports = {
   getAlbums,
   getAlbumPhotos,
   getSharedAlbums,
-  initializeCache,
   joinAlbum,
   joinPendingAlbums,
   shareAlbum,

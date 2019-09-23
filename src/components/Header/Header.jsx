@@ -7,7 +7,7 @@ export default function(props) {
   const { image } = auth.getProfile();
 
   return (
-    <header className="header">
+    <header className="header u-margin-bottom-big">
       <Menu fixed="top" inverted borderless>
         <Menu.Item as={Link} to="/" header>
           Photo Swipe
@@ -21,7 +21,7 @@ export default function(props) {
             <Dropdown.Item as={Link} to="/albums">
               Manage Albums
             </Dropdown.Item>
-            <Dropdown.Item as={Link} to="/new-album">
+            <Dropdown.Item as={Link} to="/create-album">
               Create Album
             </Dropdown.Item>
           </Dropdown.Menu>

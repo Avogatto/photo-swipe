@@ -22,9 +22,7 @@ export default function(props) {
         </h1>
       </header>
       <main className="login-page__main">
-        <div className="row">
-          <OAuth auth={auth} socket={socket} />
-        </div>
+        <OAuth auth={auth} socket={socket} />
       </main>
     </div>
   );

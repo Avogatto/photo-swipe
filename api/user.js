@@ -1,13 +1,12 @@
 const firebase = require('firebase');
 const db = firebase.firestore();
 
-function addSharedAlbum(userEmail, shareToken, albumId) {
+function addShareToken(userEmail, shareToken) {
   const userRef = db.collection('users').doc(userEmail);
   userRef
     .set(
       {
         shareTokens: firebase.firestore.FieldValue.arrayUnion(shareToken),
-        sharedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
       },
       { merge: true }
     )
@@ -76,9 +75,29 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
   }
 }
 
+function addSharedAlbum(userEmail, albumId) {
+  const userRef = db.collection('users').doc(userEmail);
+  userRef
+    .set(
+      {
+        sharedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
+      },
+      { merge: true }
+    )
+    .then(() => {
+      // If the doc already exists, this will merge the new data with any existing document.
+      console.log('success!');
+    })
+    .catch(err => {
+      console.error(err);
+      throw err;
+    });
+}
+
 module.exports = {
   getShareTokens,
   addShareToken,
   getAuthorizedUsers,
   addAuthorizedUser,
+  addSharedAlbum,
 };

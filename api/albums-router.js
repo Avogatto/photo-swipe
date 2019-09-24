@@ -27,6 +27,21 @@ router.post('/memberships', async (req, res) => {
   }
 });
 
+router.post('/:albumId/share-token', async (req, res) => {
+  const { albumId } = req.params;
+  const userToken = req.user.token;
+  const userId = req.user.profile.id;
+  const shareUser = req.body.shareUser;
+  try {
+    const album = await shareAlbum(userToken, userId, albumId, shareUser);
+    await addShareToken(shareUser, albumId);
+    res.json({ album });
+  } catch (err) {
+    console.log('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
 router.get('/:albumId/photos', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
@@ -41,16 +56,12 @@ router.get('/:albumId/photos', async (req, res) => {
 
 router.post('/:albumId/photos/:photoId/users', async (req, res) => {
   const { albumId, photoId } = req.params;
-  const userToken = req.user.token;
-  const userId = req.user.profile.id;
   const {
     emails: [{ value: userEmail }],
   } = profile;
-  const shareUser = req.body.shareUser;
   
   try {
-    const album = await shareAlbum(userToken, userId, albumId, shareUser);
-    await addShareToken(shareUser, albumId);
+    await addSharedAlbum(userEmail, albumId);
     await tagUserInPhoto(photoId, userEmail)
     res.json({ album });
     console.log('SUCCESS!');

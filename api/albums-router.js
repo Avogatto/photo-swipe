@@ -27,10 +27,6 @@ router.post('/memberships', async (req, res) => {
   }
 });
 
-router.post('/:albumId/share-token', async (req, res) => {
-  
-});
-
 router.get('/:albumId/photos', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;

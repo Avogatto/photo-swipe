@@ -1,12 +1,13 @@
 const firebase = require('firebase');
 const db = firebase.firestore();
 
-function addShareToken(userEmail, shareToken) {
+function addSharedAlbum(userEmail, shareToken, albumId) {
   const userRef = db.collection('users').doc(userEmail);
   userRef
     .set(
       {
         shareTokens: firebase.firestore.FieldValue.arrayUnion(shareToken),
+        sharedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
       },
       { merge: true }
     )

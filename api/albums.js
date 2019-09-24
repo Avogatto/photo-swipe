@@ -129,7 +129,7 @@ function getSharedAlbums(userToken) {
   return getPaginatedAlbumsList(userToken, 'sharedAlbums');
 }
 
-async function saveTaggedUser(userEmail, photoId) {
+async function tagUserInPhoto(photoId, userEmail) {
   try {
     await db
       .collection('photos')
@@ -152,5 +152,5 @@ module.exports = {
   joinAlbum,
   joinPendingAlbums,
   shareAlbum,
-  saveTaggedUser,
+  tagUserInPhoto,
 };

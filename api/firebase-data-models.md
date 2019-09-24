@@ -17,6 +17,16 @@ Users
   "id": "email address of the user",
   "admin": "if true, the user has admin-level access; boolean",
   "authorized": "if true, the user is authorized to access the app; boolean",
-  "fullName": "full name of user given as input; string"
+  "fullName": "full name of user given as input; string",
+  "sharedAlbums": "array of unique album ids from gphotos that the user has been tagged in"
+}
+```
+
+Albums
+
+```json
+{
+  "id": "unique id of album from google photso api response; string",
+  "active": "if true, the album is being actively shared; boolean"
 }
 ```

@@ -2,11 +2,14 @@
 
 const { URLSearchParams } = require('url');
 const fetch = require('node-fetch');
+const firebase = require('firebase');
 const {
   apiBase,
   requests: { albumPageSize, searchPageSize },
 } = require('../config');
 const { getShareTokens } = require('./user');
+
+const db = firebase.firestore();
 
 async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
   const searchParamsString = searchParams
@@ -27,7 +30,7 @@ async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
   return result;
 }
 
-async function joinAlbum(userToken, userId, shareToken) {
+async function joinAlbum(userToken, shareToken) {
   const endpoint = `sharedAlbums:join`;
   const params = { method: 'POST' };
   const body = { shareToken };
@@ -46,7 +49,7 @@ async function joinPendingAlbums(userToken, userId) {
   return Promise.all(joinAllPromises);
 }
 
-async function shareAlbum(userToken, userId, albumId) {
+async function shareAlbum(userToken, albumId) {
   const endpoint = `albums/${albumId}:share`;
   const params = { method: 'POST' };
   const body = {
@@ -60,7 +63,7 @@ async function shareAlbum(userToken, userId, albumId) {
   return result;
 }
 
-async function createAlbum(userToken, userId, title) {
+async function createAlbum(userToken, title) {
   const params = { method: 'POST' };
   const body = { album: { title } };
   const album = await fetchJson({
@@ -95,7 +98,7 @@ async function getPaginatedAlbumsList(userToken, endpoint) {
   return albumsList;
 }
 
-function getAlbums(userToken, userId) {
+function getAlbums(userToken) {
   console.log('Loading albums from API.');
   return getPaginatedAlbumsList(userToken, 'albums');
 }
@@ -121,9 +124,24 @@ async function getAlbumPhotos(userToken, albumId) {
   return photosList;
 }
 
-function getSharedAlbums(userToken, userId) {
+function getSharedAlbums(userToken) {
   console.log('Loading shared albums from API.');
   return getPaginatedAlbumsList(userToken, 'sharedAlbums');
+}
+
+async function saveTaggedUser(userEmail, photoId) {
+  try {
+    await db
+      .collection('photos')
+      .doc(photoId)
+      .update({
+        tagged: firestore.FieldValue.arrayUnion(userEmail),
+      });
+      console.log('success!');
+  } catch (err) {
+    console.error(err);
+    throw new Error('Could not add authorized user.');
+  }
 }
 
 module.exports = {
@@ -134,4 +152,5 @@ module.exports = {
   joinAlbum,
   joinPendingAlbums,
   shareAlbum,
+  saveTaggedUser,
 };

@@ -49,16 +49,18 @@ async function joinPendingAlbums(userToken, userId) {
   return Promise.all(joinAllPromises);
 }
 
-async function updateAlbumStatus(active) {
+async function updateAlbumStatus(albumId, active) {
   try {
     await db
       .collection('albums')
       .doc(albumId)
-      .set({
-        active,
-      },
-      { merge: true });
-      console.log('success!');
+      .set(
+        {
+          active,
+        },
+        { merge: true }
+      );
+    console.log('success!');
   } catch (err) {
     console.error(err);
     throw new Error('Could not update album status.');
@@ -77,7 +79,7 @@ async function activateAlbum(userToken, albumId) {
     };
     const result = await fetchJson({ body, endpoint, params, userToken });
     console.log('WE GOT A RESULT', result);
-    await updateAlbumStatus(true);
+    await updateAlbumStatus(albumId, true);
     return result;
   } catch (err) {
     console.error(err);
@@ -157,9 +159,9 @@ async function tagUserInPhoto(photoId, userEmail) {
       .collection('photos')
       .doc(photoId)
       .update({
-        tagged: firestore.FieldValue.arrayUnion(userEmail),
+        tagged: firebase.firestore.FieldValue.arrayUnion(userEmail),
       });
-      console.log('success!');
+    console.log('success!');
   } catch (err) {
     console.error(err);
     throw new Error('Could not add authorized user.');

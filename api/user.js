@@ -29,15 +29,15 @@ async function getSharedUsers(albumId) {
       return [];
     }
 
-    const sharedUsers = snapshot.map((doc) => {
+    const sharedUsers = snapshot.map(doc => {
       return doc.id;
-    })
+    });
 
     return sharedUsers;
   } catch (err) {
     console.error(err);
     throw err;
-  };
+  }
 }
 
 function getShareTokens(userEmail) {
@@ -120,5 +120,5 @@ module.exports = {
   getAuthorizedUsers,
   addAuthorizedUser,
   addSharedAlbum,
-  getSharedUsers;
+  getSharedUsers,
 };

@@ -7,7 +7,7 @@ const {
   joinAlbum,
   shareAlbum,
 } = require('./albums');
-const { addShareToken } = require('./user');
+const { addShareToken, getSharedUsers } = require('./user');
 
 const router = Router();
 
@@ -26,13 +26,16 @@ router.post('/memberships', async (req, res) => {
   }
 });
 
-router.post('/:albumId/share-token', async (req, res) => {
+router.post('/:albumId/share', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
-  const shareUser = req.body.shareUser;
   try {
+    // this will add sharetokens to users who were tagged in this specific album
     const shareToken = await shareAlbum(userToken, albumId);
-    await addShareToken(shareUser, shareToken);
+    const shareUsers = await getSharedUsers(albumId);
+    shareUsers.forEach((user) => {
+      await addShareToken(user, shareToken);
+    });
     res.json({ shareToken });
   } catch (err) {
     console.log('ERRRRRRR', err);

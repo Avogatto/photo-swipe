@@ -26,12 +26,13 @@ router.post('/memberships', async (req, res) => {
   }
 });
 
-router.post('/:albumId/share', async (req, res) => {
+router.post('/:albumId/activate', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
+
   try {
     // this will add sharetokens to users who were tagged in this specific album
-    const shareToken = await shareAlbum(userToken, albumId);
+    const shareToken = await activateAlbum(userToken, albumId);
     const shareUsers = await getSharedUsers(albumId);
     shareUsers.forEach((user) => {
       await addShareToken(user, shareToken);

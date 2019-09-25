@@ -49,18 +49,40 @@ async function joinPendingAlbums(userToken, userId) {
   return Promise.all(joinAllPromises);
 }
 
-async function shareAlbum(userToken, albumId) {
-  const endpoint = `albums/${albumId}:share`;
-  const params = { method: 'POST' };
-  const body = {
-    sharedAlbumOptions: {
-      isCollaborative: false,
-      isCommentable: true,
-    },
-  };
-  const result = await fetchJson({ body, endpoint, params, userToken });
-  console.log('WE GOT A RESULT', result);
-  return result;
+async function updateAlbumStatus(active) {
+  try {
+    await db
+      .collection('albums')
+      .doc(albumId)
+      .set({
+        active,
+      },
+      { merge: true });
+      console.log('success!');
+  } catch (err) {
+    console.error(err);
+    throw new Error('Could not update album status.');
+  }
+}
+
+async function activateAlbum(userToken, albumId) {
+  try {
+    const endpoint = `albums/${albumId}:share`;
+    const params = { method: 'POST' };
+    const body = {
+      sharedAlbumOptions: {
+        isCollaborative: false,
+        isCommentable: true,
+      },
+    };
+    const result = await fetchJson({ body, endpoint, params, userToken });
+    console.log('WE GOT A RESULT', result);
+    await updateAlbumStatus(true);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error('Could not activate album.');
+  }
 }
 
 async function createAlbum(userToken, title) {
@@ -151,6 +173,6 @@ module.exports = {
   getSharedAlbums,
   joinAlbum,
   joinPendingAlbums,
-  shareAlbum,
+  activateAlbum,
   tagUserInPhoto,
 };

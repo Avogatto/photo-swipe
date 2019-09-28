@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, withRouter } from 'react-router-dom';
 
-import Header from '../Header/Header.jsx';
+import Header from './Header.jsx';
 
 function PrivateRoute(props) {
   const { auth, component: Component, location, ...rest } = props;

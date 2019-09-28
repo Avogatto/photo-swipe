@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 
-import LandingPage from '../views/LandingPage/LandingPage.jsx';
-import LoginPage from '../views/LoginPage/LoginPage.jsx';
-import CreateAlbum from '../views/CreateAlbum/CreateAlbum.jsx';
-import ListAlbums from '../views/ListAlbums/ListAlbums.jsx';
-import ListPhotos from '../views/ListPhotos/ListPhotos.jsx';
-import ManageUsers from '../views/ManageUsers/ManageUsers.jsx';
+import LandingPage from '../views/LandingPage.jsx';
+import LoginPage from '../views/LoginPage.jsx';
+import CreateAlbum from '../views/CreateAlbum.jsx';
+import ListAlbums from '../views/ListAlbums.jsx';
+import ListPhotos from '../views/ListPhotos.jsx';
+import ManageUsers from '../views/ManageUsers.jsx';
 
-import TestView from '../views/TestView/TestView.jsx';
+import TestView from '../views/TestView.jsx';
 
-import PrivateRoute from '../components/PrivateRoute/PrivateRoute.jsx';
-import Header from '../components/Header/Header.jsx';
+import PrivateRoute from '../components/PrivateRoute.jsx';
+import Header from '../components/Header.jsx';
 
 import './App.css';
 

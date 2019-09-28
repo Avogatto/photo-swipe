@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, Message } from 'semantic-ui-react';
-import { createUser } from '../../utils/api';
+import { createUser } from '../utils/api';
 
 export default class AddUserForm extends React.Component {
   constructor(props) {

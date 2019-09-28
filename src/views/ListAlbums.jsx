@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Container, Header, Image, Loader } from 'semantic-ui-react';
-import { fetchAlbums } from '../../utils/api';
+import { fetchAlbums } from '../utils/api';
 
 export default class ListAlbums extends React.Component {
   constructor(props) {

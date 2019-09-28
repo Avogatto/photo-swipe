@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card, Container, Header, Loader } from 'semantic-ui-react';
-import SelectablePhoto from '../../components/SelectablePhoto/SelectablePhoto';
+import SelectablePhoto from '../components/SelectablePhoto';
 
 const MOCK_SRC =
   'https://firebasestorage.googleapis.com/v0/b/take-my-stufff.appspot.com/o/items%2Fimg1.jpeg?alt=media&token=9400f530-9f30-4e18-a65d-8cebe9b64e68';

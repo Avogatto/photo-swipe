@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, Container, Header, Loader } from 'semantic-ui-react';
-import { fetchPhotos, fetchUserOptions } from '../../utils/api';
+import { fetchPhotos, fetchUserOptions } from '../utils/api';
 
-import TaggablePhoto from '../../components/TaggablePhoto/TaggablePhoto.jsx';
+import TaggablePhoto from '../components/TaggablePhoto.jsx';
 
 export default class ListPhotos extends React.Component {
   constructor(props) {

@@ -8,7 +8,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-import { createAlbum } from '../../utils/api';
+import { createAlbum } from '../utils/api';
 
 export default class CreateAlbum extends React.Component {
   constructor(props) {

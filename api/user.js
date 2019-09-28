@@ -21,19 +21,14 @@ function addShareToken(userEmail, shareToken) {
 }
 
 async function getSharedUsers(albumId) {
-  const usersRef = db.collection('users');
   try {
-    const snapshot = usersRef.where('sharedAlbums', 'array-contains', albumId);
-    if (snapshot.empty) {
-      console.log('no matching documents.');
-      return [];
-    }
-
-    const sharedUsers = snapshot.map(doc => {
+    const { docs } = await db
+      .collection('users')
+      .where('sharedAlbums', 'array-contains', albumId)
+      .get();
+    return docs.map(doc => {
       return doc.id;
     });
-
-    return sharedUsers;
   } catch (err) {
     console.error(err);
     throw err;

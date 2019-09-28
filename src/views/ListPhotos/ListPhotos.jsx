@@ -30,7 +30,8 @@ export default class ListPhotos extends React.Component {
       <TaggablePhoto
         baseUrl={baseUrl}
         filename={filename}
-        id={id}
+        photoId={id}
+        albumId={albumId}
         userOptions={userOptions}
       />
     ));

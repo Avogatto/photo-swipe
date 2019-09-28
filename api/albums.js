@@ -153,18 +153,40 @@ function getSharedAlbums(userToken) {
   return getPaginatedAlbumsList(userToken, 'sharedAlbums');
 }
 
-async function tagUserInPhoto(photoId, userEmail) {
+async function updateTaggedUsers(albumId, photoId, taggedUsers) {
   try {
     await db
+      .collection('albums')
+      .doc(albumId)
       .collection('photos')
       .doc(photoId)
       .update({
-        tagged: firebase.firestore.FieldValue.arrayUnion(userEmail),
+        taggedUsers,
       });
     console.log('success!');
   } catch (err) {
     console.error(err);
     throw new Error('Could not add authorized user.');
+  }
+}
+
+async function getTaggedUsers(albumId, photoId) {
+  try {
+    const photo = await db
+      .collection('albums')
+      .doc(albumId)
+      .collection('photos')
+      .doc(photoId)
+      .get()
+    if (!photo.exists) {
+      const err = new Error('Photo does not exist!');
+      console.error(err);
+      throw err;
+    }
+    return photo.data().taggedUsers || [];
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
@@ -176,5 +198,6 @@ module.exports = {
   joinAlbum,
   joinPendingAlbums,
   activateAlbum,
-  tagUserInPhoto,
+  updateTaggedUsers,
+  getTaggedUsers,
 };

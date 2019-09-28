@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Dropdown, Image } from 'semantic-ui-react';
+import { fetchTaggedUsers } from '../../utils/api';
 
 /* TO BE REPLACED BY REAL STUFF LATER */
 const taggedUsers = [{ name: 'Sara Rubin', email: 'sara.rubin@example.com' }];
@@ -12,13 +13,23 @@ export default class TaggablePhoto extends React.Component {
   }
 
   async componentDidMount() {
-    // const { taggedUsers } = await fetch(INSERT API CALL FOR PHOTO'S TAGGED USERS HERE);
-    const value = (taggedUsers || []).map(({ email }) => email);
-    this.setState({ value });
+    const {
+      match: {
+        params: { albumId, photoId },
+      },
+    } = this.props;
+    try {
+      const taggedUsers = await fetchTaggedUsers(albumId, photoId);
+      const value = taggedUsers;
+      this.setState({ value });
+    } catch (err) {
+      console.error(err);
+    }
+    
   }
 
   async updateValue(value) {
-    // TODO: UPDATE VALUE IN FIREBASE HERE!!!!!!
+    await updateTaggedUsers
     console.log('you updated the value in firebase', value);
   }
 

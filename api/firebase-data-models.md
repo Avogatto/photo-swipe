@@ -3,9 +3,9 @@ Photos
 ```json
 {
     "id": "unique id of photo from google photos api response; string",
-    "usersTagged": "users who are tagged in the photo; array of user emails",
-    "usersApproved": "users who have approved the photo; array of user emails",
-    "usersRejected": "users who have rejected the photo; array of user emails",
+    "taggedUsers": "users who are tagged in the photo; array of user emails",
+    "approvedUsers": "users who have approved the photo; array of user emails",
+    "rejectedUsers": "users who have rejected the photo; array of user emails",
     "albumId": "unique id of album from google photos api response; string"
 }
 ```
@@ -28,6 +28,7 @@ Albums
 ```json
 {
   "id": "unique id of album from google photso api response; string",
-  "active": "if true, the album is being actively shared; boolean"
+  "active": "if true, the album is being actively shared; boolean",
+  "photos": "subcollection of photo objects"
 }
 ```

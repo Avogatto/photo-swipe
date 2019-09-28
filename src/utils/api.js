@@ -49,3 +49,18 @@ export async function createAlbum(album) {
   });
   return result;
 }
+
+export async function fetchTaggedUsers(albumId, photoId) {
+  return makeRequest(`api/albums/${albumId}/photos/${photoId}/users`, {
+    method: 'GET',
+  });
+}
+
+export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
+  return makeRequest(`api/albums/${albumId}/photos/${photoId}/users`, {
+    method: 'POST',
+    body: JSON.stringify({
+      taggedUsers,
+    }),
+  });
+}

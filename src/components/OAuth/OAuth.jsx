@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './OAuth.css';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 

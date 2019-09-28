@@ -28,6 +28,7 @@ export default class ListPhotos extends React.Component {
     const { photos, userOptions } = this.state;
     return photos.map(({ baseUrl, filename, id }) => (
       <TaggablePhoto
+        key={id}
         baseUrl={baseUrl}
         filename={filename}
         id={id}
@@ -48,7 +49,7 @@ export default class ListPhotos extends React.Component {
             {loaded ? (
               this.renderPhotos()
             ) : (
-              <Loader active inline="centered" size="large" inverted>
+              <Loader active inline="centered" size="large">
                 Loading Photos...
               </Loader>
             )}

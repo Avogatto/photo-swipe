@@ -42,7 +42,7 @@ export default class TaggablePhoto extends React.Component {
         <Card.Content extra>
           <Dropdown
             onChange={this.handleChange}
-            placeholder="Tagged Users"
+            text="tag users"
             fluid
             multiple
             selection

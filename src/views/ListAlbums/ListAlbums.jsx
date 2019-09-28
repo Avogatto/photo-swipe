@@ -44,7 +44,7 @@ export default class ListAlbums extends React.Component {
             {loaded ? (
               this.renderAlbums()
             ) : (
-              <Loader active inline="centered" size="large" inverted>
+              <Loader active inline="centered" size="large">
                 Loading Albums...
               </Loader>
             )}

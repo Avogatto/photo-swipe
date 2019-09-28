@@ -2,16 +2,6 @@
   outline: none !important;
 }
 
-body {
-  background-image: linear-gradient(
-    to right bottom,
-    rgba(126, 213, 111, 0.8),
-    rgba(40, 180, 133, 0.8)
-  );
-  background-size: cover;
-  background-position: top;
-}
-
 /* Buttons */
 
 button {
@@ -27,8 +17,8 @@ button {
   padding: 1.5rem 3rem;
   border-radius: 10rem;
   transition: all 0.2s;
-  background-color: #fff;
-  color: #777;
+  background-color: #1b1d1e;
+  color: white;
   font-size: 1.4rem;
 }
 

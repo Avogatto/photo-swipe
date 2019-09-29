@@ -17,7 +17,14 @@ class OAuth extends Component {
       this.popup.close();
       auth.login(user);
     });
-    // TODO: add on('error')
+    socket.on('error', error => {
+      this.popup.close();
+      console.log('sorry, there was an error', error);
+    });
+    socket.on('unauthorized', user => {
+      this.popup.close();
+      console.log('sorry, user is not authorized!', user);
+    });
   }
 
   checkPopup() {

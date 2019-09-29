@@ -4,28 +4,35 @@ const { passport: passportConfig } = require('../config');
 
 const router = Router();
 
-function formatProfile(user) {
-  const {
-    profile: { photos, displayName: fullName },
-  } = user;
-  const [{ value: image = null } = {}] = photos || [];
-  return { profile: { fullName, image } };
-}
-
 router.get('/session', (req, res) => {
   if (!req.user || !req.isAuthenticated()) {
     res.status(404).json({ status: 'NOT FOUND' });
   } else {
-    res.json(formatProfile(req.user));
+    const { admin, profile } = req.user;
+    res.json({ admin, profile });
   }
 });
 
 router.get(
   '/callback',
   passport.authenticate('google', passportConfig),
-  ({ app, session, user }, res) => {
+  async (req, res) => {
+    const { app, session, user } = req;
+    const { admin, authorized, error, profile } = user;
+    const { socketId } = session;
     const io = app.get('io');
-    io.in(session.socketId).emit('authenticated', formatProfile(user));
+
+    if (authorized) {
+      io.in(socketId).emit('authenticated', { admin, profile });
+    } else {
+      if (error) {
+        io.in(socketId).emit('error', { error });
+      } else {
+        io.in(socketId).emit('unauthorized', { profile });
+      }
+      req.logout();
+      session.destroy();
+    }
     res.sendStatus(200);
   }
 );

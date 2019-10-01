@@ -47,7 +47,7 @@ export default class AddUserForm extends React.Component {
         <Form
           success={submitted}
           onSubmit={this.handleSubmit}
-          autocomplete="off"
+          autoComplete="off"
         >
           <Form.Group widths="equal">
             <Form.Field

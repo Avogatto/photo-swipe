@@ -39,7 +39,7 @@ export default class CreateAlbum extends React.Component {
           <Form
             success={submitted}
             onSubmit={this.handleSubmit}
-            autocomplete="off"
+            autoComplete="off"
           >
             <Form.Field
               control={Input}

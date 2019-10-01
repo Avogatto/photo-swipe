@@ -8,6 +8,8 @@ import CreateAlbum from '../views/CreateAlbum.jsx';
 import ListAlbums from '../views/ListAlbums.jsx';
 import ListPhotos from '../views/ListPhotos.jsx';
 import ManageUsers from '../views/ManageUsers.jsx';
+import PendingApprovals from '../views/PendingApprovals.jsx';
+import PhotosToApprove from '../views/PhotosToApprove.jsx';
 
 import TestView from '../views/TestView.jsx';
 
@@ -64,15 +66,37 @@ class App extends Component {
               />
               <PrivateRoute
                 auth={auth}
-                path="/albums/:albumId/photos"
+                path="/albums/:albumId"
                 component={ListPhotos}
+                admin
               />
-              <PrivateRoute auth={auth} path="/users" component={ManageUsers} />
-              <PrivateRoute auth={auth} path="/albums" component={ListAlbums} />
+              <PrivateRoute
+                auth={auth}
+                path="/users"
+                component={ManageUsers}
+                admin
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/albums"
+                component={ListAlbums}
+                admin
+              />
               <PrivateRoute
                 auth={auth}
                 path="/create-album"
                 component={CreateAlbum}
+                admin
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/pending/:albumId"
+                component={PhotosToApprove}
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/pending"
+                component={PendingApprovals}
               />
               <PrivateRoute auth={auth} path="/" component={LandingPage} />
             </Switch>

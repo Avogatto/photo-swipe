@@ -28,22 +28,16 @@ export default class TaggablePhoto extends React.Component {
   }
 
   render() {
-    const { baseUrl, filename, id, userOptions } = this.props;
+    const { baseUrl, id, userOptions } = this.props;
     const { value } = this.state;
 
     return (
       <Card key={id}>
-        <Card.Content textAlign="center">
-          <Image src={`${baseUrl}=w${300}-h${300}`} />
-          <Card.Description style={{ marginTop: '1rem' }}>
-            {filename}
-          </Card.Description>
-        </Card.Content>
+        <Image src={`${baseUrl}=w${800}-h${800}`} rounded fluid />
         <Card.Content extra>
           <Dropdown
             onChange={this.handleChange}
             text="tag users"
-            fluid
             multiple
             selection
             options={userOptions}

@@ -34,6 +34,11 @@ export async function fetchAlbums() {
   return albums || [];
 }
 
+export async function fetchSharedAlbums() {
+  const { albums } = await makeRequest('/api/albums/shared');
+  return albums || [];
+}
+
 export async function createUser(user) {
   const result = await makeRequest('/api/users', {
     method: 'POST',
@@ -46,6 +51,14 @@ export async function createAlbum(album) {
   const result = await makeRequest('/api/albums', {
     method: 'POST',
     body: JSON.stringify(album),
+  });
+  return result;
+}
+
+export async function shareAlbum(albumId, shareUser) {
+  const result = await makeRequest(`/api/albums/${albumId}/share-token`, {
+    method: 'POST',
+    body: JSON.stringify({ shareUser }),
   });
   return result;
 }

@@ -57,8 +57,6 @@ export async function fetchTaggedUsers(albumId, photoId) {
       method: 'GET',
     }
   );
-  console.log(`result = ${JSON.stringify(result, null, 1)}`);
-
   return result.taggedUsers || [];
 }
 

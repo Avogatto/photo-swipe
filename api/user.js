@@ -12,7 +12,9 @@ async function addShareToken(userEmail, shareToken) {
         },
         { merge: true } // If the doc already exists, this will merge the new data with any existing document.
       );
-    console.log(` success! user = ${JSON.stringify(user, null, 1)}`);
+    console.log(
+      `Successfully updated shareTokens = ${JSON.stringify(user, null, 1)}`
+    );
   } catch (err) {
     console.error(err);
     throw err;
@@ -25,9 +27,13 @@ async function getSharedUsers(albumId) {
       .collection('users')
       .where('sharedAlbums', 'array-contains', albumId)
       .get();
-    return docs.map(doc => {
+    const results = docs.map(doc => {
       return doc.id;
     });
+    console.log(
+      `Successfully retrieved sharedUsers = ${JSON.stringify(results, null, 1)}`
+    );
+    return results;
   } catch (err) {
     console.error(err);
     throw err;
@@ -46,7 +52,15 @@ async function getShareTokens(userEmail) {
         console.error(err);
         throw err;
       }
-      return user.data().shareTokens || [];
+      const results = user.data().shareTokens || [];
+      console.log(
+        `Successfully retrieved shareTokens = ${JSON.stringify(
+          results,
+          null,
+          1
+        )}`
+      );
+      return results;
     }
   } catch (err) {
     console.error(err);
@@ -60,10 +74,18 @@ async function getAuthorizedUsers() {
       .collection('users')
       .where('authorized', '==', true)
       .get();
-    return docs.map(doc => {
+    const results = docs.map(doc => {
       const { fullName } = doc.data();
       return { userEmail: doc.id, fullName };
     });
+    console.log(
+      `Successfully retreived authorizedUsers = ${JSON.stringify(
+        results,
+        null,
+        1
+      )}`
+    );
+    return results;
   } catch (err) {
     console.error(err);
     throw new Error('Could not retrieve list of authorized users.');
@@ -72,7 +94,7 @@ async function getAuthorizedUsers() {
 
 async function addAuthorizedUser(userEmail, fullName, admin) {
   try {
-    await db
+    const user = await db
       .collection('users')
       .doc(userEmail)
       .set(
@@ -83,7 +105,9 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
         },
         { merge: true }
       );
-    console.log('success!');
+    console.log(
+      `Successfully added authorizedUser = ${JSON.stringify(user, null, 1)}`
+    );
   } catch (err) {
     console.error(err);
     throw new Error('Could not add authorized user.');
@@ -92,7 +116,7 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
 
 async function addSharedAlbum(userEmail, albumId) {
   try {
-    await db
+    const user = await db
       .collection('users')
       .doc(userEmail)
       .set(
@@ -101,7 +125,9 @@ async function addSharedAlbum(userEmail, albumId) {
         },
         { merge: true } // If the doc already exists, this will merge the new data with any existing document.
       );
-    console.log('success!');
+    console.log(
+      `Successfully updated sharedAlbums = ${JSON.stringify(user, null, 1)}`
+    );
   } catch (err) {
     console.error(err);
     throw err;

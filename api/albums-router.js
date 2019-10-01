@@ -65,7 +65,6 @@ router.get('/:albumId/photos/:photoId/users', async (req, res) => {
 
   try {
     const taggedUsers = await getTaggedUsers(albumId, photoId);
-    console.log(`SUCCESS! = ${JSON.stringify(taggedUsers, null, 1)}`);
     res.json({ taggedUsers });
   } catch (err) {
     console.log('ERRRRRRR', err);

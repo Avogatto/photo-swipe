@@ -6,7 +6,7 @@ export default class TaggablePhoto extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = { value: [] };
+    this.state = { taggedUsers: [] };
   }
 
   async componentDidMount() {
@@ -14,21 +14,21 @@ export default class TaggablePhoto extends React.Component {
 
     try {
       const taggedUsers = await fetchTaggedUsers(albumId, photoId);
-      this.setState({ value: taggedUsers });
+      this.setState({ taggedUsers });
     } catch (err) {
       console.error(err);
     }
   }
 
-  async handleChange(e, { value }) {
+  async handleChange(e, { value: taggedUsers }) {
     const { id: photoId, albumId } = this.props;
-    this.setState({ value });
-    await updateTaggedUsers(albumId, photoId, value);
+    this.setState({ taggedUsers });
+    await updateTaggedUsers(albumId, photoId, taggedUsers);
   }
 
   render() {
     const { baseUrl, filename, id, userOptions } = this.props;
-    const { value } = this.state;
+    const { taggedUsers } = this.state;
 
     return (
       <Card key={id}>
@@ -46,7 +46,7 @@ export default class TaggablePhoto extends React.Component {
             multiple
             selection
             options={userOptions}
-            value={value}
+            value={taggedUsers}
           />
         </Card.Content>
       </Card>

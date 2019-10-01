@@ -160,13 +160,15 @@ async function updateTaggedUsers(albumId, photoId, taggedUsers) {
       .doc(albumId)
       .collection('photos')
       .doc(photoId)
-      .update({
-        taggedUsers,
-      });
-    console.log('success!');
+      .set(
+        {
+          taggedUsers,
+        },
+        { merge: true }
+      );
   } catch (err) {
     console.error(err);
-    throw new Error('Could not add authorized user.');
+    throw new Error('Could not update tagged user.');
   }
 }
 
@@ -177,7 +179,7 @@ async function getTaggedUsers(albumId, photoId) {
       .doc(albumId)
       .collection('photos')
       .doc(photoId)
-      .get()
+      .get();
     if (!photo.exists) {
       const err = new Error('Photo does not exist!');
       console.error(err);

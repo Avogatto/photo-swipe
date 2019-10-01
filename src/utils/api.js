@@ -51,13 +51,19 @@ export async function createAlbum(album) {
 }
 
 export async function fetchTaggedUsers(albumId, photoId) {
-  return makeRequest(`api/albums/${albumId}/photos/${photoId}/users`, {
-    method: 'GET',
-  });
+  const result = await makeRequest(
+    `/api/albums/${albumId}/photos/${photoId}/users`,
+    {
+      method: 'GET',
+    }
+  );
+  console.log(`result = ${JSON.stringify(result, null, 1)}`);
+
+  return result.taggedUsers || [];
 }
 
 export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
-  return makeRequest(`api/albums/${albumId}/photos/${photoId}/users`, {
+  return makeRequest(`/api/albums/${albumId}/photos/${photoId}/users`, {
     method: 'POST',
     body: JSON.stringify({
       taggedUsers,

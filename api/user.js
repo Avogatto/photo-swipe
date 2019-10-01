@@ -1,23 +1,22 @@
 const firebase = require('firebase');
 const db = firebase.firestore();
 
-function addShareToken(userEmail, shareToken) {
-  const userRef = db.collection('users').doc(userEmail);
-  userRef
-    .set(
-      {
-        shareTokens: firebase.firestore.FieldValue.arrayUnion(shareToken),
-      },
-      { merge: true }
-    )
-    .then(() => {
-      // If the doc already exists, this will merge the new data with any existing document.
-      console.log('success!');
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+async function addShareToken(userEmail, shareToken) {
+  try {
+    const user = await db
+      .collection('users')
+      .doc(userEmail)
+      .set(
+        {
+          shareTokens: firebase.firestore.FieldValue.arrayUnion(shareToken),
+        },
+        { merge: true } // If the doc already exists, this will merge the new data with any existing document.
+      );
+    console.log(` success! user = ${JSON.stringify(user, null, 1)}`);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 async function getSharedUsers(albumId) {
@@ -35,23 +34,24 @@ async function getSharedUsers(albumId) {
   }
 }
 
-function getShareTokens(userEmail) {
-  return db
-    .collection('users')
-    .doc(userEmail)
-    .get()
-    .then(user => {
+async function getShareTokens(userEmail) {
+  try {
+    const user = await db
+      .collection('users')
+      .doc(userEmail)
+      .get();
+    if (!user.exists) {
       if (!user.exists) {
         const err = new Error('User does not exist!');
         console.error(err);
         throw err;
       }
       return user.data().shareTokens || [];
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 async function getAuthorizedUsers() {
@@ -90,23 +90,22 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
   }
 }
 
-function addSharedAlbum(userEmail, albumId) {
-  const userRef = db.collection('users').doc(userEmail);
-  userRef
-    .set(
-      {
-        sharedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
-      },
-      { merge: true }
-    )
-    .then(() => {
-      // If the doc already exists, this will merge the new data with any existing document.
-      console.log('success!');
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+async function addSharedAlbum(userEmail, albumId) {
+  try {
+    await db
+      .collection('users')
+      .doc(userEmail)
+      .set(
+        {
+          sharedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
+        },
+        { merge: true } // If the doc already exists, this will merge the new data with any existing document.
+      );
+    console.log('success!');
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 module.exports = {

@@ -26,11 +26,16 @@ export default class ListPhotos extends React.Component {
 
   renderPhotos() {
     const { photos, userOptions } = this.state;
+    const {
+      match: {
+        params: { albumId },
+      },
+    } = this.props;
     return photos.map(({ baseUrl, filename, id }) => (
       <TaggablePhoto
         baseUrl={baseUrl}
         filename={filename}
-        photoId={id}
+        id={id}
         albumId={albumId}
         userOptions={userOptions}
       />

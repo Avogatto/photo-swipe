@@ -6,6 +6,7 @@ const {
   getSharedAlbums,
   joinAlbum,
   activateAlbum,
+  getTaggedUsers,
   updateTaggedUsers,
 } = require('./albums');
 const { addShareToken, getSharedUsers, addSharedAlbum } = require('./user');
@@ -35,7 +36,7 @@ router.post('/:albumId/activate', async (req, res) => {
     // this will add sharetokens to users who were tagged in this specific album
     const [shareToken, shareUsers] = await Promise.all([
       activateAlbum(userToken, albumId),
-      getSharedUsers(albumId)
+      getSharedUsers(albumId),
     ]);
     shareUsers.forEach(async user => {
       await addShareToken(user, shareToken);
@@ -63,8 +64,9 @@ router.get('/:albumId/photos/:photoId/users', async (req, res) => {
   const { albumId, photoId } = req.params;
 
   try {
-    await getTaggedUsers(albumId, photoId);
-    console.log('SUCCESS!');
+    const taggedUsers = await getTaggedUsers(albumId, photoId);
+    console.log(`SUCCESS! = ${JSON.stringify(taggedUsers, null, 1)}`);
+    res.json({ taggedUsers });
   } catch (err) {
     console.log('ERRRRRRR', err);
     res.status(500).json(err);
@@ -76,10 +78,12 @@ router.post('/:albumId/photos/:photoId/users', async (req, res) => {
   const { taggedUsers } = req.body;
 
   try {
-    await Promise.all([
-      addSharedAlbum(userEmail, albumId), 
-      updateTaggedUsers(albumId, photoId, taggedUsers)
-    ]);
+    const promises = [];
+    promises.push(updateTaggedUsers(albumId, photoId, taggedUsers));
+    taggedUsers.map(userEmail => {
+      promises.push(addSharedAlbum(userEmail, albumId));
+    });
+    await Promise.all(promises);
     console.log('SUCCESS!');
   } catch (err) {
     console.log('ERRRRRRR', err);

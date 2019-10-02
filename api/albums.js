@@ -181,9 +181,7 @@ async function getTaggedUsers(albumId, photoId) {
       .doc(photoId)
       .get();
     if (!photo.exists) {
-      const err = new Error('Photo does not exist!');
-      console.error(err);
-      throw err;
+      return [];
     }
     return photo.data().taggedUsers || [];
   } catch (err) {

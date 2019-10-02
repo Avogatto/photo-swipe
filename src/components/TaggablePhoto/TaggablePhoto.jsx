@@ -21,16 +21,14 @@ export default class TaggablePhoto extends React.Component {
   }
 
   async updateTaggedUsers(e, { value: taggedUsers }) {
-    console.log('change ', taggedUsers);
     const { id: photoId, albumId } = this.props;
     this.setState({ taggedUsers });
     try {
       const result = await updateTaggedUsers(albumId, photoId, taggedUsers);
-      console.log('result = ', JSON.stringify(result));
+      return result;
     } catch (err) {
       console.error(err);
     }
-    console.log('yo');
   }
 
   render() {

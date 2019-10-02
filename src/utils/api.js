@@ -4,9 +4,8 @@ export async function makeRequest(endpoint, options) {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
   };
-  let response;
   try {
-    response = await fetch(endpoint, fetchOpts);
+    const response = await fetch(endpoint, fetchOpts);
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('json')) return response.json();
     return response.text();
@@ -61,7 +60,6 @@ export async function fetchTaggedUsers(albumId, photoId) {
 }
 
 export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
-  console.log('updating taggedUsers');
   try {
     const update = await makeRequest(
       `/api/albums/${albumId}/photos/${photoId}/users`,
@@ -72,8 +70,6 @@ export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
         }),
       }
     );
-    console.log('helloooo');
-    console.log(JSON.stringify(update));
     return update;
   } catch (e) {
     console.error(e);

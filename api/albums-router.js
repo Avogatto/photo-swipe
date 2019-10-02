@@ -73,6 +73,7 @@ router.get('/:albumId/photos/:photoId/users', async (req, res) => {
 });
 
 router.post('/:albumId/photos/:photoId/users', async (req, res) => {
+  console.log('yay!');
   const { albumId, photoId } = req.params;
   const { taggedUsers } = req.body;
 
@@ -83,7 +84,7 @@ router.post('/:albumId/photos/:photoId/users', async (req, res) => {
       promises.push(addTaggedAlbum(userEmail, albumId));
     });
     await Promise.all(promises);
-    console.log('SUCCESS!');
+    res.json({ taggedUsers });
   } catch (err) {
     console.log('ERRRRRRR', err);
     res.status(500).json(err);

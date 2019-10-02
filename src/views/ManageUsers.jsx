@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Dropdown, Header } from 'semantic-ui-react';
-import { fetchUserOptions } from '../../utils/api';
+import { fetchUserOptions } from '../utils/api';
 
-import AddUserForm from '../../components/AddUserForm/AddUserForm.jsx';
+import AddUserForm from '../components/AddUserForm.jsx';
 
 export default class ManageUsers extends React.Component {
   constructor(props) {

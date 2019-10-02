@@ -46,7 +46,7 @@ async function joinPendingAlbums(userToken, userId) {
   return Promise.all(joinAllPromises);
 }
 
-async function shareAlbum(userToken, userId, albumId) {
+async function shareAlbum(userToken, albumId) {
   const endpoint = `albums/${albumId}:share`;
   const params = { method: 'POST' };
   const body = {

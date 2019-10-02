@@ -18,6 +18,7 @@ const albumsRouter = require('./albums-router');
 const usersRouter = require('./users-router');
 const checkToken = require('./middleware/check-token');
 const { joinPendingAlbums } = require('./albums');
+const { getUserProfile } = require('./user');
 
 const app = express();
 const apiRouter = express.Router();
@@ -33,12 +34,26 @@ passport.use(
       const now = new Date();
       const expiry = now.setSeconds(now.getSeconds() + (expiresIn - 300));
       const {
-        emails: [{ value: id }],
+        photos,
+        displayName: fullName,
+        emails: [{ value: email }],
       } = profile;
-
-      await joinPendingAlbums(token, id);
-
-      done(null, { profile, token, refreshToken, expiry });
+      const [{ value: image = null } = {}] = photos || [];
+      const data = {
+        admin: null,
+        authorized: false,
+        profile: { fullName, image, email },
+        token,
+        refreshToken,
+        expiry,
+      };
+      try {
+        const { admin, authorized } = await getUserProfile(email);
+        if (authorized) await joinPendingAlbums(token, email);
+        done(null, { ...data, admin, authorized });
+      } catch (err) {
+        done(null, { ...data, error: err.toString() });
+      }
     }
   )
 );

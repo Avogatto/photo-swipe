@@ -30,12 +30,11 @@ router.post('/memberships', async (req, res) => {
 router.post('/:albumId/share-token', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
-  const userId = req.user.profile.id;
   const shareUser = req.body.shareUser;
   try {
-    const album = await shareAlbum(userToken, userId, albumId, shareUser);
-    await addShareToken(shareUser);
-    res.json({ album });
+    const shareToken = await shareAlbum(userToken, albumId);
+    await addShareToken(shareUser, shareToken);
+    res.json({ shareToken });
   } catch (err) {
     console.log('ERRRRRRR', err);
     res.status(500).json(err);

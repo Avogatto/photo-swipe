@@ -61,10 +61,21 @@ export async function fetchTaggedUsers(albumId, photoId) {
 }
 
 export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
-  return makeRequest(`/api/albums/${albumId}/photos/${photoId}/users`, {
-    method: 'POST',
-    body: JSON.stringify({
-      taggedUsers,
-    }),
-  });
+  console.log('updating taggedUsers');
+  try {
+    const update = await makeRequest(
+      `/api/albums/${albumId}/photos/${photoId}/users`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          taggedUsers,
+        }),
+      }
+    );
+    console.log('helloooo');
+    console.log(JSON.stringify(update));
+    return update;
+  } catch (e) {
+    console.error(e);
+  }
 }

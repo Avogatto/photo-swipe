@@ -9,7 +9,7 @@ const {
   getTaggedUsers,
   updateTaggedUsers,
 } = require('./albums');
-const { addShareToken, getSharedUsers, addSharedAlbum } = require('./user');
+const { addShareToken, getSharedUsers, addTaggedAlbum } = require('./user');
 
 const router = Router();
 
@@ -80,7 +80,7 @@ router.post('/:albumId/photos/:photoId/users', async (req, res) => {
     const promises = [];
     promises.push(updateTaggedUsers(albumId, photoId, taggedUsers));
     taggedUsers.map(userEmail => {
-      promises.push(addSharedAlbum(userEmail, albumId));
+      promises.push(addTaggedAlbum(userEmail, albumId));
     });
     await Promise.all(promises);
     console.log('SUCCESS!');

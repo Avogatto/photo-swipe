@@ -114,20 +114,18 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
   }
 }
 
-async function addSharedAlbum(userEmail, albumId) {
+async function addTaggedAlbum(userEmail, albumId) {
   try {
-    const user = await db
+    await db
       .collection('users')
       .doc(userEmail)
       .set(
         {
-          sharedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
+          taggedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
         },
         { merge: true } // If the doc already exists, this will merge the new data with any existing document.
       );
-    console.log(
-      `Successfully updated sharedAlbums = ${JSON.stringify(user, null, 1)}`
-    );
+    console.debug('Successfully updated taggedAlbums.');
   } catch (err) {
     console.error(err);
     throw err;
@@ -139,6 +137,6 @@ module.exports = {
   addShareToken,
   getAuthorizedUsers,
   addAuthorizedUser,
-  addSharedAlbum,
+  addTaggedAlbum,
   getSharedUsers,
 };

@@ -5,7 +5,7 @@ import { fetchTaggedUsers, updateTaggedUsers } from '../../utils/api';
 export default class TaggablePhoto extends React.Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
+    this.updateTaggedUsers = this.updateTaggedUsers.bind(this);
     this.state = { taggedUsers: [] };
   }
 
@@ -20,10 +20,17 @@ export default class TaggablePhoto extends React.Component {
     }
   }
 
-  async handleChange(e, { value: taggedUsers }) {
+  async updateTaggedUsers(e, { value: taggedUsers }) {
+    console.log('change ', taggedUsers);
     const { id: photoId, albumId } = this.props;
     this.setState({ taggedUsers });
-    await updateTaggedUsers(albumId, photoId, taggedUsers);
+    try {
+      const result = await updateTaggedUsers(albumId, photoId, taggedUsers);
+      console.log('result = ', JSON.stringify(result));
+    } catch (err) {
+      console.error(err);
+    }
+    console.log('yo');
   }
 
   render() {
@@ -40,7 +47,7 @@ export default class TaggablePhoto extends React.Component {
         </Card.Content>
         <Card.Content extra>
           <Dropdown
-            onChange={this.handleChange}
+            onChange={this.updateTaggedUsers}
             placeholder="Tagged Users"
             fluid
             multiple

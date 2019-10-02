@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './OAuth.css';
+import { Button } from 'semantic-ui-react';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 
@@ -18,7 +18,14 @@ class OAuth extends Component {
       this.popup.close();
       auth.login(user);
     });
-    // TODO: add on('error')
+    socket.on('error', error => {
+      this.popup.close();
+      console.log('sorry, there was an error', error);
+    });
+    socket.on('unauthorized', user => {
+      this.popup.close();
+      console.log('sorry, user is not authorized!', user);
+    });
   }
 
   checkPopup() {
@@ -62,9 +69,15 @@ class OAuth extends Component {
 
   render() {
     return (
-      <button className="btn" onClick={this.startAuth}>
+      <Button
+        circular
+        color="black"
+        size="massive"
+        style={{ margin: '2rem auto' }}
+        onClick={this.startAuth}
+      >
         Login with Google
-      </button>
+      </Button>
     );
   }
 }

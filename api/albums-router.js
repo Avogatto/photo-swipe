@@ -38,9 +38,7 @@ router.post('/:albumId/activate', async (req, res) => {
       activateAlbum(userToken, albumId),
       getSharedUsers(albumId),
     ]);
-    shareUsers.forEach(async user => {
-      await addShareToken(user, shareToken);
-    });
+    await Promise.all[shareUsers.map(user => addShareToken(user, shareToken))];
     res.json({ shareToken });
   } catch (err) {
     console.log('ERRRRRRR', err);
@@ -78,9 +76,8 @@ router.post('/:albumId/photos/:photoId/users', async (req, res) => {
   const { taggedUsers } = req.body;
 
   try {
-    const promises = [];
-    promises.push(updateTaggedUsers(albumId, photoId, taggedUsers));
-    taggedUsers.map(userEmail => {
+    const promises = [updateTaggedUsers(albumId, photoId, taggedUsers)];
+    taggedUsers.forEach(userEmail => {
       promises.push(addTaggedAlbum(userEmail, albumId));
     });
     await Promise.all(promises);

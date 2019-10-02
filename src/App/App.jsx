@@ -2,17 +2,19 @@ import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 
-import LandingPage from '../views/LandingPage/LandingPage.jsx';
-import LoginPage from '../views/LoginPage/LoginPage.jsx';
-import CreateAlbum from '../views/CreateAlbum/CreateAlbum.jsx';
-import ListAlbums from '../views/ListAlbums/ListAlbums.jsx';
-import ListPhotos from '../views/ListPhotos/ListPhotos.jsx';
-import ManageUsers from '../views/ManageUsers/ManageUsers.jsx';
+import LandingPage from '../views/LandingPage.jsx';
+import LoginPage from '../views/LoginPage.jsx';
+import CreateAlbum from '../views/CreateAlbum.jsx';
+import ListAlbums from '../views/ListAlbums.jsx';
+import ListPhotos from '../views/ListPhotos.jsx';
+import ManageUsers from '../views/ManageUsers.jsx';
+import PendingApprovals from '../views/PendingApprovals.jsx';
+import PhotosToApprove from '../views/PhotosToApprove.jsx';
 
-import TestView from '../views/TestView/TestView.jsx';
+import TestView from '../views/TestView.jsx';
 
-import PrivateRoute from '../components/PrivateRoute/PrivateRoute.jsx';
-import Header from '../components/Header/Header.jsx';
+import PrivateRoute from '../components/PrivateRoute.jsx';
+import Header from '../components/Header.jsx';
 
 import './App.css';
 
@@ -64,15 +66,37 @@ class App extends Component {
               />
               <PrivateRoute
                 auth={auth}
-                path="/albums/:albumId/photos"
+                path="/albums/:albumId"
                 component={ListPhotos}
+                admin
               />
-              <PrivateRoute auth={auth} path="/users" component={ManageUsers} />
-              <PrivateRoute auth={auth} path="/albums" component={ListAlbums} />
+              <PrivateRoute
+                auth={auth}
+                path="/users"
+                component={ManageUsers}
+                admin
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/albums"
+                component={ListAlbums}
+                admin
+              />
               <PrivateRoute
                 auth={auth}
                 path="/create-album"
                 component={CreateAlbum}
+                admin
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/pending/:albumId"
+                component={PhotosToApprove}
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/pending"
+                component={PendingApprovals}
               />
               <PrivateRoute auth={auth} path="/" component={LandingPage} />
             </Switch>

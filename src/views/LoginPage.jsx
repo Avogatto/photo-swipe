@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import OAuth from '../../components/OAuth/OAuth.jsx';
+import OAuth from '../components/OAuth.jsx';
 import './LoginPage.css';
 
 export default function(props) {

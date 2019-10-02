@@ -92,6 +92,19 @@ async function getAuthorizedUsers() {
   }
 }
 
+async function getUserProfile(userEmail) {
+  try {
+    const user = await db
+      .collection('users')
+      .doc(userEmail)
+      .get();
+    return user.data() || { authorized: false, admin: null };
+  } catch (err) {
+    console.error('Could not retrieve user profile.', err);
+    throw err;
+  }
+}
+
 async function addAuthorizedUser(userEmail, fullName, admin) {
   try {
     const user = await db
@@ -139,4 +152,5 @@ module.exports = {
   addAuthorizedUser,
   addTaggedAlbum,
   getSharedUsers,
+  getUserProfile,
 };

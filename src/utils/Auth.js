@@ -2,14 +2,16 @@ import { makeRequest } from './api';
 
 export default class Auth {
   constructor() {
+    this.admin = null;
     this.authenticated = null;
+    this.profile = {};
     this.getRouteProps = () => {
       throw new Error('Auth is not initialized');
     };
-    this.profile = {};
 
     this.initialize = this.initialize.bind(this);
     this.getProfile = this.getProfile.bind(this);
+    this.isAdmin = this.isAdmin.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
@@ -18,15 +20,21 @@ export default class Auth {
   async initialize(getRouteProps) {
     this.getRouteProps = getRouteProps;
     try {
-      const { profile } = await makeRequest('/auth/session');
+      const { admin, profile } = await makeRequest('/auth/session');
+      this.admin = admin;
       this.authenticated = Boolean(profile);
       if (profile) this.profile = profile;
     } catch (err) {
       console.error('failed to confirm authenticated', err);
     }
   }
+
   getProfile() {
     return this.profile;
+  }
+
+  isAdmin() {
+    return this.admin;
   }
 
   isAuthenticated() {
@@ -39,6 +47,7 @@ export default class Auth {
     if (user) {
       this.authenticated = true;
       this.profile = user.profile;
+      this.admin = user.admin;
     }
     history.push(from);
   }

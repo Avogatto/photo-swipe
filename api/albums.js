@@ -2,11 +2,14 @@
 
 const { URLSearchParams } = require('url');
 const fetch = require('node-fetch');
+const firebase = require('firebase');
 const {
   apiBase,
   requests: { albumPageSize, searchPageSize },
 } = require('../config');
 const { getShareTokens } = require('./user');
+
+const db = firebase.firestore();
 
 async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
   const searchParamsString = searchParams
@@ -27,7 +30,7 @@ async function fetchJson({ body, endpoint, params, searchParams, userToken }) {
   return result;
 }
 
-async function joinAlbum(userToken, userId, shareToken) {
+async function joinAlbum(userToken, shareToken) {
   const endpoint = `sharedAlbums:join`;
   const params = { method: 'POST' };
   const body = { shareToken };
@@ -38,29 +41,50 @@ async function joinAlbum(userToken, userId, shareToken) {
 
 async function joinPendingAlbums(userToken, userId) {
   const shareTokens = await getShareTokens(userId);
-  const joinAllPromises = shareTokens.map(token => {
-    return async () => {
-      return joinAlbum(userToken, userId, token);
+  return Promise.all(
+    (shareTokens || []).map(token => joinAlbum(userToken, userId, token))
+  );
+}
+
+async function updateAlbumStatus(albumId, active) {
+  try {
+    await db
+      .collection('albums')
+      .doc(albumId)
+      .set(
+        {
+          active,
+        },
+        { merge: true }
+      );
+    console.log('success!');
+  } catch (err) {
+    console.error(err);
+    throw new Error('Could not update album status.');
+  }
+}
+
+async function activateAlbum(userToken, albumId) {
+  try {
+    const endpoint = `albums/${albumId}:share`;
+    const params = { method: 'POST' };
+    const body = {
+      sharedAlbumOptions: {
+        isCollaborative: false,
+        isCommentable: true,
+      },
     };
-  });
-  return Promise.all(joinAllPromises);
+    const result = await fetchJson({ body, endpoint, params, userToken });
+    console.log('WE GOT A RESULT', result);
+    await updateAlbumStatus(albumId, true);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error('Could not activate album.');
+  }
 }
 
-async function shareAlbum(userToken, albumId) {
-  const endpoint = `albums/${albumId}:share`;
-  const params = { method: 'POST' };
-  const body = {
-    sharedAlbumOptions: {
-      isCollaborative: false,
-      isCommentable: true,
-    },
-  };
-  const result = await fetchJson({ body, endpoint, params, userToken });
-  console.log('WE GOT A RESULT', result);
-  return result;
-}
-
-async function createAlbum(userToken, userId, title) {
+async function createAlbum(userToken, title) {
   const params = { method: 'POST' };
   const body = { album: { title } };
   const album = await fetchJson({
@@ -95,7 +119,7 @@ async function getPaginatedAlbumsList(userToken, endpoint) {
   return albumsList;
 }
 
-function getAlbums(userToken, userId) {
+function getAlbums(userToken) {
   console.log('Loading albums from API.');
   return getPaginatedAlbumsList(userToken, 'albums');
 }
@@ -121,9 +145,46 @@ async function getAlbumPhotos(userToken, albumId) {
   return photosList;
 }
 
-function getSharedAlbums(userToken, userId) {
+function getSharedAlbums(userToken) {
   console.log('Loading shared albums from API.');
   return getPaginatedAlbumsList(userToken, 'sharedAlbums');
+}
+
+async function updateTaggedUsers(albumId, photoId, taggedUsers) {
+  try {
+    await db
+      .collection('albums')
+      .doc(albumId)
+      .collection('photos')
+      .doc(photoId)
+      .set(
+        {
+          taggedUsers,
+        },
+        { merge: true }
+      );
+  } catch (err) {
+    console.error(err);
+    throw new Error('Could not update tagged user.');
+  }
+}
+
+async function getTaggedUsers(albumId, photoId) {
+  try {
+    const photo = await db
+      .collection('albums')
+      .doc(albumId)
+      .collection('photos')
+      .doc(photoId)
+      .get();
+    if (!photo.exists) {
+      return [];
+    }
+    return photo.data().taggedUsers || [];
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 module.exports = {
@@ -133,5 +194,7 @@ module.exports = {
   getSharedAlbums,
   joinAlbum,
   joinPendingAlbums,
-  shareAlbum,
+  activateAlbum,
+  updateTaggedUsers,
+  getTaggedUsers,
 };

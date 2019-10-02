@@ -1,17 +1,13 @@
 import React from 'react';
 import { Card, Container, Header, Loader } from 'semantic-ui-react';
-import { fetchPhotos, fetchUserOptions } from '../utils/api';
+import { fetchPhotos, fetchUserOptions } from '../../utils/api';
 
-import TaggablePhoto from '../components/TaggablePhoto.jsx';
+import TaggablePhoto from '../../components/TaggablePhoto/TaggablePhoto.jsx';
 
 export default class ListPhotos extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      photos: [],
-      userOptions: null,
-      loaded: false,
-    };
+    this.state = { photos: [], userOptions: null, loaded: false };
   }
 
   async componentDidMount() {
@@ -30,12 +26,17 @@ export default class ListPhotos extends React.Component {
 
   renderPhotos() {
     const { photos, userOptions } = this.state;
+    const {
+      match: {
+        params: { albumId },
+      },
+    } = this.props;
     return photos.map(({ baseUrl, filename, id }) => (
       <TaggablePhoto
-        key={id}
         baseUrl={baseUrl}
         filename={filename}
         id={id}
+        albumId={albumId}
         userOptions={userOptions}
       />
     ));
@@ -44,20 +45,22 @@ export default class ListPhotos extends React.Component {
   render() {
     const { loaded } = this.state;
     return (
-      <Container textAlign="center">
-        <Header as="h1" style={{ marginBottom: '2rem' }}>
-          Photos
-        </Header>
-        <Card.Group centered>
-          {loaded ? (
-            this.renderPhotos()
-          ) : (
-            <Loader active inline="centered" size="large">
-              Loading Photos...
-            </Loader>
-          )}
-        </Card.Group>
-      </Container>
+      <div className="list-photos">
+        <Container text>
+          <Header as="h1" style={{ marginBottom: '2rem' }}>
+            Photos
+          </Header>
+          <Card.Group>
+            {loaded ? (
+              this.renderPhotos()
+            ) : (
+              <Loader active inline="centered" size="large" inverted>
+                Loading Photos...
+              </Loader>
+            )}
+          </Card.Group>
+        </Container>
+      </div>
     );
   }
 }

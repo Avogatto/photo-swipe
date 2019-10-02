@@ -1,47 +1,51 @@
 import React from 'react';
 import { Card, Dropdown, Image } from 'semantic-ui-react';
-
-/* TO BE REPLACED BY REAL STUFF LATER */
-const taggedUsers = [{ name: 'Sara Rubin', email: 'sara.rubin@example.com' }];
+import { fetchTaggedUsers, updateTaggedUsers } from '../utils/api';
 
 export default class TaggablePhoto extends React.Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.state = { value: [] };
+    this.updateTaggedUsers = this.updateTaggedUsers.bind(this);
+    this.state = { taggedUsers: [] };
   }
 
   async componentDidMount() {
-    // const { taggedUsers } = await fetch(INSERT API CALL FOR PHOTO'S TAGGED USERS HERE);
-    const value = (taggedUsers || []).map(({ email }) => email);
-    this.setState({ value });
+    const { id: photoId, albumId } = this.props;
+
+    try {
+      const taggedUsers = await fetchTaggedUsers(albumId, photoId);
+      this.setState({ taggedUsers });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  async updateValue(value) {
-    // TODO: UPDATE VALUE IN FIREBASE HERE!!!!!!
-    console.log('you updated the value in firebase', value);
-  }
-
-  async handleChange(e, { value }) {
-    await this.updateValue(value);
-    this.setState({ value });
+  async updateTaggedUsers(e, { value: taggedUsers }) {
+    const { id: photoId, albumId } = this.props;
+    this.setState({ taggedUsers });
+    try {
+      const result = await updateTaggedUsers(albumId, photoId, taggedUsers);
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   render() {
     const { baseUrl, id, userOptions } = this.props;
-    const { value } = this.state;
+    const { taggedUsers } = this.state;
 
     return (
       <Card key={id}>
         <Image src={`${baseUrl}=w${800}-h${800}`} rounded fluid />
         <Card.Content extra>
           <Dropdown
-            onChange={this.handleChange}
+            onChange={this.updateTaggedUsers}
             text="tag users"
             multiple
             selection
             options={userOptions}
-            value={value}
+            value={taggedUsers}
           />
         </Card.Content>
       </Card>

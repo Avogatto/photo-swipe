@@ -4,9 +4,8 @@ export async function makeRequest(endpoint, options) {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
   };
-  let response;
   try {
-    response = await fetch(endpoint, fetchOpts);
+    const response = await fetch(endpoint, fetchOpts);
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('json')) return response.json();
     return response.text();
@@ -34,6 +33,11 @@ export async function fetchAlbums() {
   return albums || [];
 }
 
+export async function fetchSharedAlbums() {
+  const { albums } = await makeRequest('/api/albums/shared');
+  return albums || [];
+}
+
 export async function createUser(user) {
   const result = await makeRequest('/api/users', {
     method: 'POST',
@@ -48,4 +52,31 @@ export async function createAlbum(album) {
     body: JSON.stringify(album),
   });
   return result;
+}
+
+export async function fetchTaggedUsers(albumId, photoId) {
+  const result = await makeRequest(
+    `/api/albums/${albumId}/photos/${photoId}/users`,
+    {
+      method: 'GET',
+    }
+  );
+  return result.taggedUsers || [];
+}
+
+export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
+  try {
+    const update = await makeRequest(
+      `/api/albums/${albumId}/photos/${photoId}/users`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          taggedUsers,
+        }),
+      }
+    );
+    return update;
+  } catch (e) {
+    console.error(e);
+  }
 }

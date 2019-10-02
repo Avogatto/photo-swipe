@@ -5,21 +5,22 @@ const {
   getAlbumPhotos,
   getSharedAlbums,
   joinAlbum,
-  shareAlbum,
+  activateAlbum,
+  getTaggedUsers,
+  updateTaggedUsers,
 } = require('./albums');
-const { addShareToken } = require('./user');
+const { addShareToken, getSharedUsers, addTaggedAlbum } = require('./user');
 
 const router = Router();
 
 router.post('/memberships', async (req, res) => {
   const { shareToken } = req.body;
   const userToken = req.user.token;
-  const userId = req.user.profile.id;
 
   console.log('who is user?', req.user);
 
   try {
-    const album = await joinAlbum(userToken, userId, shareToken);
+    const album = await joinAlbum(userToken, shareToken);
     res.json({ album });
   } catch (err) {
     console.log('ERRRRRRR', err);
@@ -27,15 +28,18 @@ router.post('/memberships', async (req, res) => {
   }
 });
 
-router.post('/:albumId/share-token', async (req, res) => {
+router.post('/:albumId/activate', async (req, res) => {
   const { albumId } = req.params;
   const userToken = req.user.token;
-  const userId = req.user.profile.id;
-  const shareUser = req.body.shareUser;
+
   try {
-    const album = await shareAlbum(userToken, userId, albumId, shareUser);
-    await addShareToken(shareUser);
-    res.json({ album });
+    // this will add sharetokens to users who were tagged in this specific album
+    const [shareToken, shareUsers] = await Promise.all([
+      activateAlbum(userToken, albumId),
+      getSharedUsers(albumId),
+    ]);
+    await Promise.all[shareUsers.map(user => addShareToken(user, shareToken))];
+    res.json({ shareToken });
   } catch (err) {
     console.log('ERRRRRRR', err);
     res.status(500).json(err);
@@ -54,12 +58,41 @@ router.get('/:albumId/photos', async (req, res) => {
   }
 });
 
-router.get('/shared', async (req, res) => {
-  const userToken = req.user.token;
-  const userId = req.user.profile.id;
+router.get('/:albumId/photos/:photoId/users', async (req, res) => {
+  const { albumId, photoId } = req.params;
 
   try {
-    const albums = await getSharedAlbums(userToken, userId);
+    const taggedUsers = await getTaggedUsers(albumId, photoId);
+    res.json({ taggedUsers });
+  } catch (err) {
+    console.log('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.post('/:albumId/photos/:photoId/users', async (req, res) => {
+  console.log('yay!');
+  const { albumId, photoId } = req.params;
+  const { taggedUsers } = req.body;
+
+  try {
+    const promises = [updateTaggedUsers(albumId, photoId, taggedUsers)];
+    taggedUsers.forEach(userEmail => {
+      promises.push(addTaggedAlbum(userEmail, albumId));
+    });
+    await Promise.all(promises);
+    res.json({ taggedUsers });
+  } catch (err) {
+    console.log('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/shared', async (req, res) => {
+  const userToken = req.user.token;
+
+  try {
+    const albums = await getSharedAlbums(userToken);
     console.log('Total number of shared albums:', albums.length);
     res.json({ albums });
   } catch (err) {
@@ -70,9 +103,8 @@ router.get('/shared', async (req, res) => {
 
 router.get('/', async (req, res) => {
   const userToken = req.user.token;
-  const userId = req.user.profile.id;
   try {
-    const albums = await getAlbums(userToken, userId);
+    const albums = await getAlbums(userToken);
     console.log('Total number of albums:', albums.length);
     res.json({ albums });
   } catch (err) {
@@ -82,10 +114,9 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const userToken = req.user.token;
-  const userId = req.user.profile.id;
   const title = `PS Album: ${req.body.albumTitle}`;
   try {
-    const album = await createAlbum(userToken, userId, title);
+    const album = await createAlbum(userToken, title);
     res.json({ album });
   } catch (err) {
     console.log('ERRRRRRR', err);

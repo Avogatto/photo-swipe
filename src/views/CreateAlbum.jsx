@@ -8,7 +8,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-import { createAlbum } from '../../utils/api';
+import { createAlbum } from '../utils/api';
 
 export default class CreateAlbum extends React.Component {
   constructor(props) {
@@ -39,7 +39,7 @@ export default class CreateAlbum extends React.Component {
           <Form
             success={submitted}
             onSubmit={this.handleSubmit}
-            autocomplete="off"
+            autoComplete="off"
           >
             <Form.Field
               control={Input}

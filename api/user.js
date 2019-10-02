@@ -1,42 +1,71 @@
 const firebase = require('firebase');
 const db = firebase.firestore();
 
-function addShareToken(userEmail, shareToken) {
-  const userRef = db.collection('users').doc(userEmail);
-  userRef
-    .set(
-      {
-        shareTokens: firebase.firestore.FieldValue.arrayUnion(shareToken),
-      },
-      { merge: true }
-    )
-    .then(() => {
-      // If the doc already exists, this will merge the new data with any existing document.
-      console.log('success!');
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+async function addShareToken(userEmail, shareToken) {
+  try {
+    const user = await db
+      .collection('users')
+      .doc(userEmail)
+      .set(
+        {
+          shareTokens: firebase.firestore.FieldValue.arrayUnion(shareToken),
+        },
+        { merge: true } // If the doc already exists, this will merge the new data with any existing document.
+      );
+    console.log(
+      `Successfully updated shareTokens = ${JSON.stringify(user, null, 1)}`
+    );
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
-function getShareTokens(userEmail) {
-  return db
-    .collection('users')
-    .doc(userEmail)
-    .get()
-    .then(user => {
+async function getSharedUsers(albumId) {
+  try {
+    const { docs } = await db
+      .collection('users')
+      .where('sharedAlbums', 'array-contains', albumId)
+      .get();
+    const results = docs.map(doc => {
+      return doc.id;
+    });
+    console.log(
+      `Successfully retrieved sharedUsers = ${JSON.stringify(results, null, 1)}`
+    );
+    return results;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+async function getShareTokens(userEmail) {
+  try {
+    const user = await db
+      .collection('users')
+      .doc(userEmail)
+      .get();
+    if (!user.exists) {
       if (!user.exists) {
         const err = new Error('User does not exist!');
         console.error(err);
         throw err;
       }
-      return user.data().shareTokens || [];
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+      const results = user.data().shareTokens || [];
+      console.log(
+        `Successfully retrieved shareTokens = ${JSON.stringify(
+          results,
+          null,
+          1
+        )}`
+      );
+      return results;
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 async function getAuthorizedUsers() {
@@ -45,19 +74,40 @@ async function getAuthorizedUsers() {
       .collection('users')
       .where('authorized', '==', true)
       .get();
-    return docs.map(doc => {
+    const results = docs.map(doc => {
       const { fullName } = doc.data();
       return { userEmail: doc.id, fullName };
     });
+    console.log(
+      `Successfully retreived authorizedUsers = ${JSON.stringify(
+        results,
+        null,
+        1
+      )}`
+    );
+    return results;
   } catch (err) {
     console.error(err);
     throw new Error('Could not retrieve list of authorized users.');
   }
 }
 
+async function getUserProfile(userEmail) {
+  try {
+    const user = await db
+      .collection('users')
+      .doc(userEmail)
+      .get();
+    return user.data() || { authorized: false, admin: null };
+  } catch (err) {
+    console.error('Could not retrieve user profile.', err);
+    throw err;
+  }
+}
+
 async function addAuthorizedUser(userEmail, fullName, admin) {
   try {
-    await db
+    const user = await db
       .collection('users')
       .doc(userEmail)
       .set(
@@ -68,10 +118,30 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
         },
         { merge: true }
       );
-    console.log('success!');
+    console.log(
+      `Successfully added authorizedUser = ${JSON.stringify(user, null, 1)}`
+    );
   } catch (err) {
     console.error(err);
     throw new Error('Could not add authorized user.');
+  }
+}
+
+async function addTaggedAlbum(userEmail, albumId) {
+  try {
+    await db
+      .collection('users')
+      .doc(userEmail)
+      .set(
+        {
+          taggedAlbums: firebase.firestore.FieldValue.arrayUnion(albumId),
+        },
+        { merge: true } // If the doc already exists, this will merge the new data with any existing document.
+      );
+    console.debug('Successfully updated taggedAlbums.');
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
@@ -80,4 +150,7 @@ module.exports = {
   addShareToken,
   getAuthorizedUsers,
   addAuthorizedUser,
+  addTaggedAlbum,
+  getSharedUsers,
+  getUserProfile,
 };

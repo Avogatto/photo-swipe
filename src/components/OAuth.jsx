@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'semantic-ui-react';
 
 const { REACT_APP_API_BASE: API_BASE } = process.env;
 
@@ -68,9 +69,15 @@ class OAuth extends Component {
 
   render() {
     return (
-      <button className="btn" onClick={this.startAuth}>
+      <Button
+        circular
+        color="black"
+        size="massive"
+        style={{ margin: '2rem auto' }}
+        onClick={this.startAuth}
+      >
         Login with Google
-      </button>
+      </Button>
     );
   }
 }

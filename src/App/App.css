@@ -2,36 +2,6 @@
   outline: none !important;
 }
 
-/* Buttons */
-
-button {
-  display: inline-block;
-  border: none;
-  text-decoration: none;
-  cursor: pointer;
-  text-align: center;
-}
-
-.btn {
-  text-transform: uppercase;
-  padding: 1.5rem 3rem;
-  border-radius: 10rem;
-  transition: all 0.2s;
-  background-color: #1b1d1e;
-  color: white;
-  font-size: 1.4rem;
-}
-
-.btn:hover {
-  transform: translateY(-0.3rem);
-  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
-}
-
-.btn:active {
-  transform: translateY(-0.1rem);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-}
-
 /* Utilities */
 
 .u-center-vertical {

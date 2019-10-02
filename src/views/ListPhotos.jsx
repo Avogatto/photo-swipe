@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Container, Header, Loader } from 'semantic-ui-react';
-import { fetchPhotos, fetchUserOptions, shareAlbum } from '../utils/api';
+import { fetchPhotos, fetchUserOptions } from '../utils/api';
 
 import TaggablePhoto from '../components/TaggablePhoto.jsx';
 
@@ -39,17 +39,6 @@ export default class ListPhotos extends React.Component {
         userOptions={userOptions}
       />
     ));
-  }
-
-  async handleClick() {
-    const {
-      match: {
-        params: { albumId },
-      },
-    } = this.props;
-    const { shareUser } = this.state;
-    await shareAlbum(albumId, shareUser);
-    console.log('success!!');
   }
 
   render() {

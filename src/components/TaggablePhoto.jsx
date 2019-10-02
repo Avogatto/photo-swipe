@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Dropdown, Image } from 'semantic-ui-react';
-import { fetchTaggedUsers, updateTaggedUsers } from '../../utils/api';
+import { fetchTaggedUsers, updateTaggedUsers } from '../utils/api';
 
 export default class TaggablePhoto extends React.Component {
   constructor(props) {

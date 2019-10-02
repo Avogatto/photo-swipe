@@ -41,12 +41,9 @@ async function joinAlbum(userToken, shareToken) {
 
 async function joinPendingAlbums(userToken, userId) {
   const shareTokens = await getShareTokens(userId);
-  const joinAllPromises = shareTokens.map(token => {
-    return async () => {
-      return joinAlbum(userToken, userId, token);
-    };
-  });
-  return Promise.all(joinAllPromises);
+  return Promise.all(
+    (shareTokens || []).map(token => joinAlbum(userToken, userId, token))
+  );
 }
 
 async function updateAlbumStatus(albumId, active) {

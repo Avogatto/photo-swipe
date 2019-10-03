@@ -28,6 +28,7 @@ export default class SwipeablePhotos extends React.Component {
               ref={`card${key + 1}`}
               throwout={({ target, throwDirection }) => {
                 if (throwDirection === RIGHT) {
+                  console.log('YOU APPROVED');
                   handleApproval(id);
                   target.remove();
                 } else if (throwDirection === LEFT) {
@@ -36,8 +37,9 @@ export default class SwipeablePhotos extends React.Component {
               }}
               src={`${baseUrl}=w${400}-h${400}`}
               alt={filename}
-              width="400px"
               style={{
+                maxHeight: '70vh',
+                maxWidth: '80vw',
                 position: 'absolute',
                 left: '50%',
                 transform: 'translate(-50%)',

@@ -36,8 +36,6 @@ export default class TestView extends React.Component {
   }
 
   render() {
-    console.log('SELECTED SO FAR', this.state.selections);
-
     const { photos, loaded } = this.state;
     return (
       <Container textAlign="center">

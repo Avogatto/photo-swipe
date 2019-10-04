@@ -38,7 +38,7 @@ export default class TestView extends React.Component {
   render() {
     const { photos, loaded } = this.state;
     return (
-      <Container textAlign="center">
+      <Container textAlign="center" style={{ position: 'relative' }}>
         <Header as="h2" style={{ marginBottom: '3rem' }}>
           swipe right to approve, left to reject
         </Header>

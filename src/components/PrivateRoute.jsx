@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, Route, withRouter } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 
 import Header from './Header.jsx';
 
@@ -16,10 +17,10 @@ function PrivateRoute(props) {
         if (authenticated) {
           if (!admin || isAdmin) {
             return (
-              <div className="view__authenticated">
+              <Container>
                 <Header auth={auth} />
                 <Component {...routeProps} auth={auth} />
-              </div>
+              </Container>
             );
           }
           return <Redirect to={{ pathname: '/', state: { from: location } }} />;

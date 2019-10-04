@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 import io from 'socket.io-client';
 
 import LandingPage from '../views/LandingPage.jsx';
@@ -45,9 +46,9 @@ class App extends Component {
     const { auth } = this.props;
 
     return (
-      <div className="app">
+      <Container>
         {mounted && (
-          <div className="view">
+          <Container>
             <Switch>
               <Route
                 path="/login"
@@ -100,9 +101,9 @@ class App extends Component {
               />
               <PrivateRoute auth={auth} path="/" component={LandingPage} />
             </Switch>
-          </div>
+          </Container>
         )}
-      </div>
+      </Container>
     );
   }
 }

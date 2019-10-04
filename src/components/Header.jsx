@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, Image, Menu } from 'semantic-ui-react';
+import { Container, Dropdown, Image, Menu } from 'semantic-ui-react';
 
 const dropdownProps = [
   { text: 'Manage Users', path: '/users' },
@@ -31,7 +31,7 @@ export default function(props) {
   );
 
   return (
-    <header className="header u-margin-bottom-big">
+    <Container style={{ marginBottom: '8rem' }}>
       <Menu fixed="top" inverted borderless>
         <Menu.Item as={Link} to="/" header>
           Photo Swipe
@@ -42,6 +42,6 @@ export default function(props) {
           <Image src={image} avatar size="mini" />
         </Menu.Item>
       </Menu>
-    </header>
+    </Container>
   );
 }

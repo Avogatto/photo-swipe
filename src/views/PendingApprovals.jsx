@@ -33,8 +33,8 @@ export default class PhotosToApprove extends React.Component {
               />
             ))
           ) : (
-            <Loader active inline="centered" size="large" inverted>
-              Loading Photos...
+            <Loader active inline="centered" size="large">
+              Loading Albums...
             </Loader>
           )}
         </Card.Group>

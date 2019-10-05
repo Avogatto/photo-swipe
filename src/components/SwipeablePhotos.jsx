@@ -24,7 +24,7 @@ export default class SwipeablePhotos extends React.Component {
   }
 
   render() {
-    const { handleApproval, photos } = this.props;
+    const { handleSelection, photos } = this.props;
     return (
       <ReactSwing
         config={{ throwOutConfidence }}
@@ -36,7 +36,7 @@ export default class SwipeablePhotos extends React.Component {
             throwout={({ target, throwDirection }) => {
               if (throwDirection === RIGHT) {
                 console.log('YOU APPROVED');
-                handleApproval(id);
+                handleSelection(id);
                 target.remove();
               } else if (throwDirection === LEFT) {
                 target.remove();

@@ -5,6 +5,18 @@ const {
   DIRECTION: { RIGHT, LEFT },
 } = ReactSwing;
 
+function throwOutConfidence(xOffset, yOffset, element) {
+  const xConfidence = Math.min(
+    Math.abs(xOffset) / (element.offsetWidth / 2),
+    1
+  );
+  const yConfidence = Math.min(
+    Math.abs(yOffset) / (element.offsetHeight / 2),
+    1
+  );
+  return Math.max(xConfidence, yConfidence);
+}
+
 export default class SwipeablePhotos extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +26,10 @@ export default class SwipeablePhotos extends React.Component {
   render() {
     const { handleApproval, photos } = this.props;
     return (
-      <ReactSwing setStack={stack => this.setState({ stack })}>
+      <ReactSwing
+        config={{ throwOutConfidence }}
+        setStack={stack => this.setState({ stack })}
+      >
         {photos.map(({ id, baseUrl, filename }, key) => (
           <img
             key={key}

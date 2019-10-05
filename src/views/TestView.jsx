@@ -42,11 +42,15 @@ export default class TestView extends React.Component {
         <Header as="h2" style={{ marginBottom: '3rem' }}>
           swipe right to approve, left to reject
         </Header>
-        {loaded && (
+        {loaded ? (
           <SwipeablePhotos
             photos={photos}
             handleApproval={this.handleApproval}
           />
+        ) : (
+          <Loader active inline="centered" size="large">
+            Loading Albums...
+          </Loader>
         )}
       </Container>
     );

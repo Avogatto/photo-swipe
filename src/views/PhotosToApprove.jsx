@@ -1,19 +1,19 @@
 import React from 'react';
-import { Button, Container, Header, Icon, Menu } from 'semantic-ui-react';
+import { Button, Container, Header, Loader } from 'semantic-ui-react';
 import SelectablePhotos from '../components/SelectablePhotos';
 import SwipeablePhotos from '../components/SwipeablePhotos';
 import { fetchPhotos } from '../utils/api';
 
-const submittedView = (
-  <Container>
-    <Header as="h2">
-      Thank you for submitting your approvals!
-      <Button circular color="grey" size="medium">
-        Back to pending approvals...
-      </Button>
-    </Header>
-  </Container>
-);
+// const submittedView = (
+//   <Container>
+//     <Header as="h2">
+//       Thank you for submitting your approvals!
+//       <Button circular color="grey" size="medium">
+//         Back to pending approvals...
+//       </Button>
+//     </Header>
+//   </Container>
+// );
 
 export default class PhotosToApprove extends React.Component {
   constructor(props) {
@@ -68,10 +68,21 @@ export default class PhotosToApprove extends React.Component {
     const { photos, selections } = this.state;
     return (
       <Container textAlign="center">
+        <Header as="h2">
+          Select to approve
+          <Button
+            circular
+            color="grey"
+            size="medium"
+            onClick={this.handleSelectAll}
+            style={{ marginLeft: '2rem' }}
+          >
+            Select All
+          </Button>
+        </Header>
         <SelectablePhotos
           photos={photos}
           selections={selections}
-          handleSelectAll={this.handleSelectAll}
           handleSelection={this.handleSelection}
         />
         <Button
@@ -88,73 +99,38 @@ export default class PhotosToApprove extends React.Component {
   }
 
   renderSwipeView() {
-    const { photos, selections } = this.state;
+    const { photos } = this.state;
     return (
-      <Container textAlign="center">
-        <SelectablePhotos
+      <Container textAlign="center" style={{ position: 'relative' }}>
+        <Header as="h2" style={{ marginBottom: '3rem' }}>
+          swipe right to approve, left to reject
+        </Header>
+        <SwipeablePhotos
           photos={photos}
-          selections={selections}
-          handleSelectAll={this.handleSelectAll}
           handleSelection={this.handleSelection}
         />
-        <Button
-          circular
-          size="big"
-          color="black"
-          onClick={this.handleSubmit}
-          style={{ margin: '2rem auto' }}
-        >
-          Submit
-        </Button>
-      </Container>
-    );
-  }
-
-  renderMenuView() {
-    return (
-      <Container textAlign="center">
-        <Menu
-          icon="labeled"
-          vertical
-          style={{ fontSize: '1.5rem', width: '20rem' }}
-        >
-          <Menu.Item
-            onClick={() => {
-              this.setState({ view: 'swipe' });
-            }}
-          >
-            <p>Review by Swiping</p>
-            <Icon name="square" />
-          </Menu.Item>
-          <Menu.Item
-            onClick={() => {
-              this.setState({ view: 'batch' });
-            }}
-          >
-            <p>Batch Review</p>
-            <Icon name="square" />
-          </Menu.Item>
-        </Menu>
       </Container>
     );
   }
 
   render() {
-    const { photos, view } = this.state;
-    switch (view) {
-      case 'submitted':
-        return submittedView;
-      case 'batch':
-        return this.renderBatchView();
-      case 'swipe':
-        return (
-          <SwipeablePhotos
-            photos={photos}
-            handleSelection={this.handleSelection}
-          />
-        );
-      default:
-        return this.renderMenuView();
-    }
+    const {
+      match: {
+        params: { style },
+      },
+    } = this.props;
+    const { loaded } = this.state;
+
+    return loaded ? (
+      style === 'swipe' ? (
+        this.renderSwipeView()
+      ) : (
+        this.renderBatchView()
+      )
+    ) : (
+      <Loader active inline="centered" size="large">
+        Loading Photos...
+      </Loader>
+    );
   }
 }

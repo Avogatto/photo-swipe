@@ -11,6 +11,7 @@ import ListPhotos from '../views/ListPhotos.jsx';
 import ManageUsers from '../views/ManageUsers.jsx';
 import PendingApprovals from '../views/PendingApprovals.jsx';
 import PhotosToApprove from '../views/PhotosToApprove.jsx';
+import ApprovalMenu from '../views/ApprovalMenu.jsx';
 
 import TestView from '../views/TestView.jsx';
 
@@ -91,8 +92,13 @@ class App extends Component {
               />
               <PrivateRoute
                 auth={auth}
-                path="/pending/:albumId"
+                path="/pending/:albumId/:style"
                 component={PhotosToApprove}
+              />
+              <PrivateRoute
+                auth={auth}
+                path="/pending/:albumId"
+                component={ApprovalMenu}
               />
               <PrivateRoute
                 auth={auth}

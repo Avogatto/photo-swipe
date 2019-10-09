@@ -31,7 +31,7 @@ export default function(props) {
   );
 
   return (
-    <Container style={{ marginBottom: '8rem' }}>
+    <Container style={{ marginBottom: '7rem' }}>
       <Menu fixed="top" inverted borderless>
         <Menu.Item as={Link} to="/" header>
           Photo Swipe

@@ -11,7 +11,6 @@ export default class TaggablePhoto extends React.Component {
 
   async componentDidMount() {
     const { id: photoId, albumId } = this.props;
-
     try {
       const taggedUsers = await fetchTaggedUsers(albumId, photoId);
       this.setState({ taggedUsers });
@@ -32,11 +31,11 @@ export default class TaggablePhoto extends React.Component {
   }
 
   render() {
-    const { baseUrl, id, userOptions } = this.props;
+    const { baseUrl, userOptions } = this.props;
     const { taggedUsers } = this.state;
 
     return (
-      <Card key={id}>
+      <Card>
         <Image src={`${baseUrl}=w${800}-h${800}`} rounded fluid />
         <Card.Content extra>
           <Dropdown

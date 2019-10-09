@@ -10,6 +10,11 @@ const {
   updateTaggedUsers,
 } = require('./albums');
 const { addShareToken, getSharedUsers, addTaggedAlbum } = require('./user');
+const {
+  getUserDecisionsForPhoto,
+  getAllUserDecisionsForAlbum,
+  updateUserDecision,
+} = require('./decisions-controller');
 
 const router = Router();
 
@@ -23,7 +28,7 @@ router.post('/memberships', async (req, res) => {
     const album = await joinAlbum(userToken, shareToken);
     res.json({ album });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
@@ -41,7 +46,7 @@ router.post('/:albumId/activate', async (req, res) => {
     await Promise.all[shareUsers.map(user => addShareToken(user, shareToken))];
     res.json({ shareToken });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
@@ -53,7 +58,7 @@ router.get('/:albumId/photos', async (req, res) => {
     const photos = await getAlbumPhotos(userToken, albumId);
     res.json({ photos });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
@@ -65,13 +70,12 @@ router.get('/:albumId/photos/:photoId/users', async (req, res) => {
     const taggedUsers = await getTaggedUsers(albumId, photoId);
     res.json({ taggedUsers });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
 
 router.post('/:albumId/photos/:photoId/users', async (req, res) => {
-  console.log('yay!');
   const { albumId, photoId } = req.params;
   const { taggedUsers } = req.body;
 
@@ -83,7 +87,50 @@ router.post('/:albumId/photos/:photoId/users', async (req, res) => {
     await Promise.all(promises);
     res.json({ taggedUsers });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/:albumId/decisions/:userId', async (req, res) => {
+  const { albumId, userId } = req.params;
+  try {
+    const results = await getAllUserDecisionsForAlbum(albumId, userId);
+    res.json(results);
+  } catch (err) {
+    console.error('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/:albumId/photos/:photoId/decision/:userId', async (req, res) => {
+  const { albumId, photoId, userId } = req.params;
+  try {
+    const decision = await getUserDecisionsForPhoto(albumId, photoId, userId);
+    res.json({
+      decision,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+});
+
+router.post('/:albumId/photos/:photoId/decision/:userId', async (req, res) => {
+  const { albumId, userId } = req.params;
+  const { decision } = req.body;
+
+  if (decision !== 'Approved' || decision !== 'Rejected') {
+    res.status(400).json({
+      message: `Invalid decision value. The value must be 'Approved' or 'Rejected'`,
+    });
+  }
+
+  try {
+    await updateUserDecision(albumId, photoId, userId, decision);
+    res.status(200);
+  } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -96,7 +143,7 @@ router.get('/shared', async (req, res) => {
     console.log('Total number of shared albums:', albums.length);
     res.json({ albums });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
@@ -108,6 +155,7 @@ router.get('/', async (req, res) => {
     console.log('Total number of albums:', albums.length);
     res.json({ albums });
   } catch (err) {
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });
@@ -119,7 +167,7 @@ router.post('/', async (req, res) => {
     const album = await createAlbum(userToken, title);
     res.json({ album });
   } catch (err) {
-    console.log('ERRRRRRR', err);
+    console.error('ERRRRRRR', err);
     res.status(500).json(err);
   }
 });

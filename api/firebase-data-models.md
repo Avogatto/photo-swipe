@@ -4,8 +4,7 @@ Photos
 {
   "id": "unique id of photo from google photos api response; string",
   "taggedUsers": "users who are tagged in the photo; array of user emails",
-  "approvedUsers": "users who have approved the photo; array of user emails",
-  "rejectedUsers": "users who have rejected the photo; array of user emails",
+  "decisions": "a map of userIds to decisions, value for decision could be 'Approved' or 'Rejected'",
   "albumId": "unique id of album from google photos api response; string"
 }
 ```

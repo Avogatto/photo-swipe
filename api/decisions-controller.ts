@@ -55,3 +55,24 @@ export async function updateUserDecision(albumId, photoId, userId, decision) {
     throw err;
   }
 }
+
+export async function processDecisions(albumId) {
+  try {
+    const photos = await db
+      .collection('albums')
+      .doc(albumId)
+      .collection('photos')
+      .get();
+    photos
+      .map(photo => {
+        const decisions = Object.values(photo.decisions);
+        if (!decisions.includes('Rejected')) {
+          return photo.filename;
+        }
+      })
+      .filter(p => p);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

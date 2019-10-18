@@ -64,7 +64,12 @@ export async function fetchTaggedUsers(albumId, photoId) {
   return result.taggedUsers || [];
 }
 
-export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
+export async function updateTaggedUsers(
+  albumId,
+  photoId,
+  filename,
+  taggedUsers
+) {
   try {
     const update = await makeRequest(
       `/api/albums/${albumId}/photos/${photoId}/users`,
@@ -72,6 +77,7 @@ export async function updateTaggedUsers(albumId, photoId, taggedUsers) {
         method: 'POST',
         body: JSON.stringify({
           taggedUsers,
+          filename,
         }),
       }
     );

@@ -77,10 +77,12 @@ router.get('/:albumId/photos/:photoId/users', async (req, res) => {
 
 router.post('/:albumId/photos/:photoId/users', async (req, res) => {
   const { albumId, photoId } = req.params;
-  const { taggedUsers } = req.body;
+  const { taggedUsers, filename } = req.body;
 
   try {
-    const promises = [updateTaggedUsers(albumId, photoId, taggedUsers)];
+    const promises = [
+      updateTaggedUsers(albumId, photoId, filename, taggedUsers),
+    ];
     taggedUsers.forEach(userEmail => {
       promises.push(addTaggedAlbum(userEmail, albumId));
     });
@@ -88,6 +90,17 @@ router.post('/:albumId/photos/:photoId/users', async (req, res) => {
     res.json({ taggedUsers });
   } catch (err) {
     console.error('ERRRRRRR', err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/:albumId/decisions', async (req, res) => {
+  const { albumId } = req.params;
+  try {
+    const results = await processAlbumDecisions(albumId);
+    res.json(results);
+  } catch (err) {
+    console.error('ERRRRRRR'.err);
     res.status(500).json(err);
   }
 });

@@ -150,7 +150,7 @@ function getSharedAlbums(userToken) {
   return getPaginatedAlbumsList(userToken, 'sharedAlbums');
 }
 
-async function updateTaggedUsers(albumId, photoId, taggedUsers) {
+async function updateTaggedUsers(albumId, photoId, filename, taggedUsers) {
   try {
     await db
       .collection('albums')
@@ -160,6 +160,7 @@ async function updateTaggedUsers(albumId, photoId, taggedUsers) {
       .set(
         {
           taggedUsers,
+          filename,
         },
         { merge: true }
       );

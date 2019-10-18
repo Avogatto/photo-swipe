@@ -12,7 +12,7 @@ async function addShareToken(userEmail, shareToken) {
         },
         { merge: true } // If the doc already exists, this will merge the new data with any existing document.
       );
-    console.log(
+    console.debug(
       `Successfully updated shareTokens = ${JSON.stringify(user, null, 1)}`
     );
   } catch (err) {
@@ -30,7 +30,7 @@ async function getSharedUsers(albumId) {
     const results = docs.map(doc => {
       return doc.id;
     });
-    console.log(
+    console.debug(
       `Successfully retrieved sharedUsers = ${JSON.stringify(results, null, 1)}`
     );
     return results;
@@ -53,7 +53,7 @@ async function getShareTokens(userEmail) {
         throw err;
       }
       const results = user.data().shareTokens || [];
-      console.log(
+      console.debug(
         `Successfully retrieved shareTokens = ${JSON.stringify(
           results,
           null,
@@ -78,8 +78,8 @@ async function getAuthorizedUsers() {
       const { fullName } = doc.data();
       return { userEmail: doc.id, fullName };
     });
-    console.log(
-      `Successfully retreived authorizedUsers = ${JSON.stringify(
+    console.debug(
+      `Successfully retrieved authorizedUsers = ${JSON.stringify(
         results,
         null,
         1
@@ -105,7 +105,7 @@ async function getUserProfile(userEmail) {
   }
 }
 
-async function addAuthorizedUser(userEmail, fullName, admin) {
+async function addOrUpdateAuthorizedUser(userEmail, fullName, admin) {
   try {
     const user = await db
       .collection('users')
@@ -118,7 +118,7 @@ async function addAuthorizedUser(userEmail, fullName, admin) {
         },
         { merge: true }
       );
-    console.log(
+    console.debug(
       `Successfully added authorizedUser = ${JSON.stringify(user, null, 1)}`
     );
   } catch (err) {
@@ -145,12 +145,25 @@ async function addTaggedAlbum(userEmail, albumId) {
   }
 }
 
+async function deleteUser(userEmail) {
+  try {
+    await db
+      .collection('users')
+      .doc(userEmail)
+      .delete();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 module.exports = {
   getShareTokens,
   addShareToken,
   getAuthorizedUsers,
-  addAuthorizedUser,
+  addOrUpdateAuthorizedUser,
   addTaggedAlbum,
   getSharedUsers,
   getUserProfile,
+  deleteUser,
 };

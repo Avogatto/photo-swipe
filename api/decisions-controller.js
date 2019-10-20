@@ -2,7 +2,26 @@ const firebase = require('firebase');
 
 const db = firebase.firestore();
 
-export async function getUserDecisionForPhoto(albumId, photoId, userId) {
+async function getPhotosTaggedWithUser(albumId, userId) {
+  console.log('albumid', albumId);
+  console.log('userid', userId);
+
+  const { docs } = await db
+    .collection('albums')
+    .doc(albumId)
+    .collection('photos')
+    .where('taggedUsers', 'array-contains', userId)
+    .get();
+
+  const result = docs.map(doc => {
+    console.log('what', doc);
+    return doc;
+  });
+
+  console.log('these are photos', result);
+}
+
+async function getUserDecisionForPhoto(albumId, photoId, userId) {
   try {
     const photo = await db
       .collection('albums')
@@ -21,7 +40,7 @@ export async function getUserDecisionForPhoto(albumId, photoId, userId) {
   }
 }
 
-export async function getAllUserDecisionsForAlbum(albumId, userId) {
+async function getAllUserDecisionsForAlbum(albumId, userId) {
   try {
     const photos = await db
       .collection('albums')
@@ -40,7 +59,7 @@ export async function getAllUserDecisionsForAlbum(albumId, userId) {
   }
 }
 
-export async function updateUserDecision(albumId, photoId, userId, decision) {
+async function updateUserDecision(albumId, photoId, userId, decision) {
   try {
     await db
       .collection('albums')
@@ -55,3 +74,10 @@ export async function updateUserDecision(albumId, photoId, userId, decision) {
     throw err;
   }
 }
+
+module.exports = {
+  getPhotosTaggedWithUser,
+  getUserDecisionForPhoto,
+  getAllUserDecisionsForAlbum,
+  updateUserDecision,
+};

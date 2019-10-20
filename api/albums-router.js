@@ -4,34 +4,19 @@ const {
   getAlbums,
   getAlbumPhotos,
   getSharedAlbums,
-  joinAlbum,
   activateAlbum,
   getTaggedUsers,
   updateTaggedUsers,
 } = require('./albums');
 const { addShareToken, getSharedUsers, addTaggedAlbum } = require('./user');
 const {
+  getPhotosTaggedWithUser,
   getUserDecisionsForPhoto,
   getAllUserDecisionsForAlbum,
   updateUserDecision,
 } = require('./decisions-controller');
 
 const router = Router();
-
-router.post('/memberships', async (req, res) => {
-  const { shareToken } = req.body;
-  const userToken = req.user.token;
-
-  console.log('who is user?', req.user);
-
-  try {
-    const album = await joinAlbum(userToken, shareToken);
-    res.json({ album });
-  } catch (err) {
-    console.error('ERRRRRRR', err);
-    res.status(500).json(err);
-  }
-});
 
 router.post('/:albumId/activate', async (req, res) => {
   const { albumId } = req.params;
@@ -53,10 +38,15 @@ router.post('/:albumId/activate', async (req, res) => {
 
 router.get('/:albumId/photos', async (req, res) => {
   const { albumId } = req.params;
-  const userToken = req.user.token;
+  const { admin: isAdmin, token: userToken, profile } = req.user;
+  const { email: userId } = profile;
   try {
     const photos = await getAlbumPhotos(userToken, albumId);
-    res.json({ photos });
+    if (isAdmin) res.json({ photos });
+    else {
+      await getPhotosTaggedWithUser(albumId, userId);
+      res.json({ photos });
+    }
   } catch (err) {
     console.error('ERRRRRRR', err);
     res.status(500).json(err);
@@ -117,7 +107,7 @@ router.get('/:albumId/photos/:photoId/decision/:userId', async (req, res) => {
 });
 
 router.post('/:albumId/photos/:photoId/decision/:userId', async (req, res) => {
-  const { albumId, userId } = req.params;
+  const { albumId, userId, photoId } = req.params;
   const { decision } = req.body;
 
   if (decision !== 'Approved' || decision !== 'Rejected') {
